@@ -1,0 +1,19 @@
+- name: restart webiopi
+  action: service name=webiopi state=restarted
+  sudo: yes
+
+- name: restart nginx
+  action: service name=nginx state=restarted
+  sudo: yes
+
+- name: restart php5-fpm
+  action: service name=php5-fpm state=restarted
+  sudo: yes
+
+- name: restart atd
+  action: service name=atd state=restarted
+  sudo: yes
+
+- name: restart avahi-daemon
+  action: service name=avahi-daemon state=restarted
+  sudo: yes

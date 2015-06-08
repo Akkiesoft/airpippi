@@ -1,0 +1,39 @@
+- name: install packages
+  apt: >
+    name={{ item }}
+    state=present
+    update_cache=yes
+    cache_valid_time=3600
+  with_items:
+    - at
+    - avahi-daemon
+    - nginx
+    - php5-fpm
+    - php-pear
+    - python
+    - python2.7
+    - python-dev
+    - python-setuptools
+    - vim
+  sudo: yes
+
+- name: enabled services
+  service: >
+    name={{ item }}
+    enabled=yes
+  with_items:
+    - atd
+    - avahi-daemon
+    - nginx
+    - php5-fpm
+  sudo: yes
+
+- name: install pip
+  easy_install: name=pip
+  sudo: yes
+
+- name: install tweepy
+  pip: >
+    name=tweepy
+    state=present
+  sudo: yes

@@ -1,0 +1,38 @@
+# いい方法が思いつかない
+- name: install pear modules
+  command: pear install {{ item }}
+  with_items:
+    - HTTP_Request2-2.2.0
+    - HTTP_OAuth-0.3.1
+  ignore_errors: yes
+  sudo: yes
+
+- name: set timezone to PHP
+  lineinfile: >
+    dest=/etc/php5/fpm/php.ini
+    insertafter="; date.timezone ="
+    line="date.timezone = Asia/Tokyo"
+  notify: restart php5-fpm
+  sudo: yes
+
+- name: remove www-data from /etc/at.deny for timer control
+  lineinfile: >
+    dest=/etc/at.deny
+    line="www-data"
+    state=absent
+  notify: restart atd
+  sudo: yes
+
+- name: copy nginx siteconfig
+  copy: >
+    src=default
+    dest=/etc/nginx/sites-available/default
+  notify: restart nginx
+  sudo: yes
+
+- name: copy config for avahi http service
+  copy: >
+    src=http.service
+    dest=/etc/avahi/services/http.service
+  notify: restart avahi-daemon
+  sudo: yes

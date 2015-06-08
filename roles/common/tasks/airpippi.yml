@@ -1,0 +1,60 @@
+- name: install airpippi
+  copy: >
+    src=airpippi
+    dest=/opt/
+    owner=pi
+    group=pi
+  sudo: yes
+
+- name: set permission to bin files
+  file: >
+    path={{ item }}
+    state=file
+    mode=0755
+    owner=pi
+    group=pi
+  with_items:
+    - /opt/airpippi/bin/processcheck.sh
+    - /opt/airpippi/bin/twittercrawler.py
+
+- name: touch temp.json
+  file: >
+    path=/opt/airpippi/temp.json
+    state=touch
+    mode=0644
+    owner=pi
+    group=pi
+
+- name: touch twitterauth.json
+  file: >
+    path=/opt/airpippi/twitterauth.json
+    state=touch
+    mode=0666
+    owner=www-data
+    group=www-data
+  sudo: yes
+
+- name: copy json file for twitter app
+  template: >
+    src=twitterapp.j2
+    dest=/opt/airpippi/twitterapp.json
+    mode=0444
+    owner=pi
+    group=pi
+
+- name: setting up cronjob for templogger
+  cron: >
+    name="temp logger"
+    job="/usr/bin/php /opt/airpippi/bin/templogger.php"
+
+- name: setting up cronjob for procces check twitter crawler
+  cron: >
+    name="twitter crawler process check"
+    job="/opt/airpippi/bin/processcheck.sh"
+
+- name: enable 1-wire
+  lineinfile: >
+    dest=/boot/config.txt
+    line="dtoverlay=w1-gpio"
+    state=present
+  sudo: yes

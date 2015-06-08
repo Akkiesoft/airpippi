@@ -1,0 +1,94 @@
+[GPIO]
+# Initialize following GPIOs with given function and optional value
+# This is used during WebIOPi start process
+17 = OUT 0
+
+#------------------------------------------------------------------------#
+
+[~GPIO]
+# Reset following GPIOs with given function and optional value
+# This is used at the end of WebIOPi stop process
+17 = OUT 0
+
+#------------------------------------------------------------------------#
+
+[SCRIPTS]
+# Load custom scripts syntax :
+# name = sourcefile
+#   each sourcefile may have setup, loop and destroy functions and macros
+#myscript = /home/pi/webiopi/examples/scripts/macros/script.py
+
+#------------------------------------------------------------------------#
+
+[HTTP]
+# HTTP Server configuration
+enabled = true
+port = 8000
+
+# File containing sha256(base64("user:password"))
+# Use webiopi-passwd command to generate it
+passwd-file = /etc/webiopi/passwd
+
+# Change login prompt message
+prompt = "WebIOPi"
+
+# Use doc-root to change default HTML and resource files location
+#doc-root = /home/pi/webiopi/examples/scripts/macros
+
+# Use welcome-file to change the default "Welcome" file
+#welcome-file = index.html
+
+#------------------------------------------------------------------------#
+
+[COAP]
+# CoAP Server configuration
+enabled = false
+port = 5683
+# Enable CoAP multicast
+multicast = true
+
+#------------------------------------------------------------------------#
+
+[DEVICES]
+# Device configuration syntax:
+# name = device [args...]
+#   name   : used in the URL mapping
+#   device : device name
+#   args   : (optional) see device driver doc
+# If enabled, devices configured here are mapped on REST API /device/name
+# Devices are also accessible in custom scripts using deviceInstance(name)
+# See device driver doc for methods and URI scheme available
+
+# Raspberry native UART on GPIO, uncomment to enable
+# Don't forget to remove console on ttyAMA0 in /boot/cmdline.txt
+# And also disable getty on ttyAMA0 in /etc/inittab
+#serial0 = Serial device:ttyAMA0 baudrate:9600
+
+temp0 = DS18B20 slave:{{ ds18b20_id }}
+
+#------------------------------------------------------------------------#
+
+[REST]
+# By default, REST API allows to GET/POST on all GPIOs
+# Use gpio-export to limit GPIO available through REST API  
+gpio-export = 17
+
+# Uncomment to forbid changing GPIO values 
+gpio-post-value = true
+
+# Uncomment to forbid changing GPIO functions 
+gpio-post-function = true
+
+# Uncomment to disable automatic device mapping
+device-mapping = true
+
+#------------------------------------------------------------------------#
+
+[ROUTES]
+# Custom REST API route syntax :
+# source = destination
+#   source      : URL to route
+#   destination : Resulting URL
+# Adding routes allows to simplify access with Human comprehensive URLs
+
+/room/temperature = /devices/temp0/sensor/temperature/c

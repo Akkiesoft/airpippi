@@ -1,0 +1,43 @@
+# http://sourceforge.net/projects/webiopi/files/
+- name: check exist webiopi
+  stat: path=/usr/bin/webiopi
+  register: webiopi_st
+
+- name: extract webiopi installer
+  unarchive: >
+    src=WebIOPi-0.7.1.tar.gz
+    dest=/home/pi
+  when: webiopi_st.stat.exists == False
+
+- name: rewrite installer to silent install
+  lineinfile: >
+    dest=/home/pi/WebIOPi-0.7.1/setup.sh
+    regexp="read response"
+    line="response=n"
+    state=present
+  when: webiopi_st.stat.exists == False
+
+- name: install webiopi
+  command: /home/pi/WebIOPi-0.7.1/setup.sh
+  when: webiopi_st.stat.exists == False
+  sudo: yes
+
+- name: setting up webiopi config
+  template: >
+    src=config.j2
+    dest=/etc/webiopi/config
+  notify: restart webiopi
+  sudo: yes
+
+- name: copy webiopi password
+  copy: >
+    src=passwd
+    dest=/etc/webiopi/passwd
+  notify: restart webiopi
+  sudo: yes
+
+- name: enabled webiopi service
+  service: >
+    name=webiopi
+    enabled=yes
+  sudo: yes
