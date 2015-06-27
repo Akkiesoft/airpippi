@@ -35,7 +35,7 @@ https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-
 
 ### Ansibleがインストールされたマシン
 
-インストールにはAnsibleを使用します。インストール方法は後述します。
+インストールにはAnsible 1.9以上を使用します。インストール方法は後述します。
 
 ### Raspbian
 
@@ -52,7 +52,7 @@ https://code.google.com/p/webiopi/
 roles/common/files/WebIOPi-0.7.1.tar.gzとして配置します。
 
  ```
- ※現状では、後述のAnsibleでインストールを実行しても失敗します。失敗た後に、インストール先のホームディレクトリに展開されたWebIOPiを手動でインストールしてください。
+ ※現状では、後述のAnsibleでインストールを実行しても失敗します。失敗した後に、インストール先のホームディレクトリに展開されたWebIOPiを手動でインストールしてください。
  
  $ sudo ./setup.sh
  ```
@@ -65,12 +65,20 @@ host_varsに変数ファイル用意します。exampleをコピーして、実�
 
 なお、twitterのアプリケーションのキーは各自で取得してください。
 
+Wi-Fiを使用したい場合はwifiに設定を記述します。使用しない場合はコメントアウトしてください。設定は複数記述できます。typeはNetworkManagerのkey-mgmtに相当します。
+
  ```
  ---
  ds18b20_id: <DS18B20のID(28-000001234567のように記述)>
  
  tw_consumer_key: <Twitterのアプリのコンシューマーキー>
  tw_consumer_secret: <Twitterのアプリのコンシューマーシークレットキー>
+ 
+ # wifi.type: see key-mgmt ( https://developer.gnome.org/NetworkManager/0.9/ref-settings.html#id-1.3.3.2.25 )
+ wifi:
+   - type: wpa-psk
+     ssid: mywifissid
+     pass: MyWiFiPassword
  ```
 
 Playbookの実行は以下のとおりです。

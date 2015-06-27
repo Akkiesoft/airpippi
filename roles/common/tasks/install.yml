@@ -10,8 +10,6 @@
     - nginx
     - php5-fpm
     - php-pear
-    - python
-    - python2.7
     - python-dev
     - python-setuptools
     - vim

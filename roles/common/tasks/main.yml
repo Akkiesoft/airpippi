@@ -2,3 +2,6 @@
 - include: webiopi.yml
 - include: webserver.yml
 - include: airpippi.yml
+- include: wifi.yml
+  sudo: yes
+  when: wifi is defined
