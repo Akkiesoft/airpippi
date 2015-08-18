@@ -1,0 +1,148 @@
+<!--  Airpippi  (c) 2013,2015 Akkiesoft.  -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>エアぴっぴ</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="fetch.js"></script>
+    <script>
+	function hiddenItem(item) {
+		document.getElementById(item).className = "hidden";
+		return false;
+	}
+	function sendAPI(command) {
+		var result = fetch('/api.php', {
+			method: 'post', 
+			headers: {
+				"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+			},		
+			body: 'command='+command
+		});
+		var body = result.then(function(response) {
+			console.log(response.status);
+			return response.text()
+		}).then(function(text) {
+			return text;
+		})
+		if (body) {
+			return body;
+		}
+		return false;
+	}
+	function power() {
+		var result = sendAPI("power");
+		result.then(function(body) {
+			document.getElementById("ret_power").innerHTML = "電源操作に成功しました";
+			document.getElementById("ret_power").className = "alert alert-success";
+			setTimeout("hiddenItem('ret_power')", 3000);
+		});
+		return false;
+	}
+	function timer() {
+		time = document.getElementById("time").value;
+		document.getElementById("time").value = "";
+		if (! isFinite(time)) {
+			document.getElementById("ret_timer").innerHTML = '数字を指定してください';
+			document.getElementById("ret_timer").className = "alert alert-danger";
+			setTimeout("hiddenItem('ret_timer')", 3000);
+			return false;
+		}
+		var result = sendAPI("timer&time="+time);
+		result.then(function(body) {
+			document.getElementById("ret_timer").innerHTML = time + '分後に電源を操作します<br><small>(' + body + ')</small>';
+			document.getElementById("ret_timer").className = "alert alert-success";
+			setTimeout("hiddenItem('ret_timer')", 3000);
+		});
+		return false;
+	}
+	function airpippi_temp() {
+		var result = sendAPI("temp");
+		result.then(function(temp) {
+			var tempicon = "ok";
+			if (temp < 18) { tempicon = "remove"; }
+			if (17 < temp) { tempicon = "exclamation";  }
+			if (21 < temp) { tempicon = "ok"; }
+			if (28 < temp) { tempicon = "exclamation";  }
+			if (30 < temp) { tempicon = "remove"; }
+			document.getElementById("temp").innerHTML = temp + '℃';
+			document.getElementById("temp_icon").className = "glyphicon glyphicon-" + tempicon + "-sign";
+			setTimeout("airpippi_temp()", 10000);
+		});
+	}
+	airpippi_temp();
+    </script>
+  </head>
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">エアぴっぴ</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">メイン</a></li>
+            <li><a href="temp.php">室温ログ</a></li>
+            <li><a href="settings.php">設定</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container" role="main">
+
+        <div class="page-header">
+            <h1><span class="glyphicon glyphicon-scale" aria-hidden="true"></span> 現在の室温</h1>
+        </div>
+        <h2><span id="temp_icon" class="glyphicon glyphicon-hourglass" aria-hidden="true"></span> <span id="temp"></span> </h2>
+
+        
+        <div class="page-header">
+            <h1><span class="glyphicon glyphicon-off" aria-hidden="true"></span> 電源操作</h1>
+        </div>
+        <div id="ret_power" class="hidden" role="alert">電源操作に成功しました</div>
+        <p><button name="power" class="btn btn-default" onclick="power();return false">電源を操作する</button></p>
+
+
+        <div class="page-header">
+            <h1><span class="glyphicon glyphicon-time" aria-hidden="true"></span> タイマー</h1>
+        </div>
+	<div id="ret_timer" class="hidden" role="alert"></div>
+        <p><form method="post" action="/">
+          <div class="input-group">
+            <input type="text" name="time" id="time" class="form-control" placeholder="分単位で時間を指定...">
+            <span class="input-group-btn">
+              <button type="submit" name="timerset" class="btn btn-default" onclick="timer();return false">セット</button>
+            </span>
+          </div>
+        </form></p>
+
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
