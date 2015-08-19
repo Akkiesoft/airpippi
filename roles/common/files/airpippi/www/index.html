@@ -40,7 +40,7 @@
 			body: 'command='+command
 		});
 		var body = result.then(function(response) {
-			console.log(response.status);
+			/* console.log(response.status); */
 			return response.text()
 		}).then(function(text) {
 			return text;
@@ -66,7 +66,7 @@
 		}
 		var result = sendAPI("timer&time="+time);
 		result.then(function(body) {
-			showMessage("ret_power", "alert alert-success", '分後に電源を操作します<br><small>(' + body + ')</small>', 5000);
+			showMessage("ret_timer", "alert alert-success", '分後に電源を操作します<br><small>(' + body + ')</small>', 5000);
 		});
 		return false;
 	}
