@@ -19,8 +19,14 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="fetch.js"></script>
+    <script src="js/fetch.js"></script>
     <script>
+	function showMessage(itemId, className, msg, timeout) {
+		document.getElementById(itemId).innerHTML = msg;
+		document.getElementById(itemId).className = className;
+		setTimeout("hiddenItem('"+itemId+"')", timeout);
+		return false;
+	}
 	function hiddenItem(item) {
 		document.getElementById(item).className = "hidden";
 		return false;
@@ -47,26 +53,20 @@
 	function power() {
 		var result = sendAPI("power");
 		result.then(function(body) {
-			document.getElementById("ret_power").innerHTML = "電源操作に成功しました";
-			document.getElementById("ret_power").className = "alert alert-success";
-			setTimeout("hiddenItem('ret_power')", 3000);
+			showMessage("ret_power", "alert alert-success", "電源操作に成功しました", 3000);
 		});
 		return false;
 	}
 	function timer() {
 		time = document.getElementById("time").value;
 		document.getElementById("time").value = "";
-		if (! isFinite(time)) {
-			document.getElementById("ret_timer").innerHTML = '数字を指定してください';
-			document.getElementById("ret_timer").className = "alert alert-danger";
-			setTimeout("hiddenItem('ret_timer')", 3000);
+		if (! isFinite(time) || time < 1) {
+			showMessage("ret_timer", "alert alert-danger", "1以上の数字を指定してください", 5000);
 			return false;
 		}
 		var result = sendAPI("timer&time="+time);
 		result.then(function(body) {
-			document.getElementById("ret_timer").innerHTML = time + '分後に電源を操作します<br><small>(' + body + ')</small>';
-			document.getElementById("ret_timer").className = "alert alert-success";
-			setTimeout("hiddenItem('ret_timer')", 3000);
+			showMessage("ret_power", "alert alert-success", '分後に電源を操作します<br><small>(' + body + ')</small>', 5000);
 		});
 		return false;
 	}
