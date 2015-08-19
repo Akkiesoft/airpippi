@@ -102,7 +102,7 @@ if ($pin == "" && ! isset($data['airpippi_twit'])) {
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">メイン</a></li>
+            <li><a href="/">メイン</a></li>
             <li><a href="temp.php">室温ログ</a></li>
             <li class="active"><a href="settings.php">設定</a></li>
           </ul>
