@@ -66,7 +66,7 @@
 		}
 		var result = sendAPI("timer&time="+time);
 		result.then(function(body) {
-			showMessage("ret_timer", "alert alert-success", '分後に電源を操作します<br><small>(' + body + ')</small>', 5000);
+			showMessage("ret_timer", "alert alert-success", time + '分後に電源を操作します<br><small>(' + body + ')</small>', 5000);
 		});
 		return false;
 	}
