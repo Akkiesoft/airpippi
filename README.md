@@ -112,3 +112,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+### ライブラリなど
+
+* bootstrap
+** Copyright (c) 2011-2015 Twitter, Inc
+** MIT License(see https://github.com/twbs/bootstrap/blob/master/LICENSE )
+* fetch.js
+** Copyright (c) 2014-2015 GitHub, Inc.
+** MIT License(see https://github.com/github/fetch/blob/master/LICENSE )
+* Chart.js
+**Copyright (c) 2013-2015 Nick Downie
+** MIT License(see https://github.com/nnnick/Chart.js/blob/master/LICENSE.md )
