@@ -30,8 +30,12 @@
   easy_install: name=pip
   sudo: yes
 
-- name: install tweepy
+- name: install pythoon modules
   pip: >
-    name=tweepy
+    name={{ item }}
     state=present
   sudo: yes
+  with_items:
+    - tweepy
+    - passlib
+# passlib for ansible basic auth module

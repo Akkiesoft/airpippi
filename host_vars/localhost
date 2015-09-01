@@ -1,5 +1,10 @@
 ---
 ds18b20_id: 28-000001234567
 
+airpippi_api_user: airpippi
+airpippi_api_pass: A1rp1pp1
+
+# 下の２行は馬鹿にしか見えない -- @toshi_a
 tw_consumer_key: bI6cwgYJgwQibk0xJUSSsaUON
 tw_consumer_secret: vVHD75rmkJh3Bpe8BfLQgN1xePVs0E6crdCLIshn3kYPfqe1Kc
+

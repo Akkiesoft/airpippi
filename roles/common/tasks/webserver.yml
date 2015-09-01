@@ -30,6 +30,16 @@
   notify: restart nginx
   sudo: yes
 
+- name: create htpasswd file for airpippi api
+  htpasswd: >
+    path=/etc/nginx/airpippi_api.passwd
+    name={{ airpippi_api_user }}
+    password={{ airpippi_api_pass }}
+    owner=root
+    group=www-data
+    mode=0640
+  sudo: yes
+
 - name: copy config for avahi http service
   copy: >
     src=http.service
