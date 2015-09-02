@@ -1,25 +1,25 @@
-# http://sourceforge.net/projects/webiopi/files/
-- name: check exist webiopi
-  stat: path=/usr/bin/webiopi
-  register: webiopi_st
+- name: get webiopi
+  get_url: >
+    url=http://downloads.sourceforge.net/project/webiopi/WebIOPi-0.7.1.tar.gz
+    dest=/home/{{ ansible_user_id }}
 
 - name: extract webiopi installer
   unarchive: >
-    src=WebIOPi-0.7.1.tar.gz
-    dest=/home/pi
-  when: webiopi_st.stat.exists == False
+    src=/home/{{ ansible_user_id }}/WebIOPi-0.7.1.tar.gz
+    dest=/home/{{ ansible_user_id }}/
+    copy=no
 
 - name: rewrite installer to silent install
   lineinfile: >
-    dest=/home/pi/WebIOPi-0.7.1/setup.sh
+    dest=/home/{{ ansible_user_id }}/WebIOPi-0.7.1/setup.sh
     regexp="read response"
     line="response=n"
     state=present
-  when: webiopi_st.stat.exists == False
 
 - name: install webiopi
-  command: /home/pi/WebIOPi-0.7.1/setup.sh
-  when: webiopi_st.stat.exists == False
+  command: /home/{{ ansible_user_id }}/WebIOPi-0.7.1/setup.sh
+  args:
+    chdir: /home/{{ ansible_user_id }}/WebIOPi-0.7.1
   sudo: yes
 
 - name: setting up webiopi config

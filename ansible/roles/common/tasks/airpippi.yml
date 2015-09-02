@@ -2,8 +2,8 @@
   copy: >
     src=airpippi
     dest=/opt/
-    owner=pi
-    group=pi
+    owner={{ ansible_user_id }}
+    group={{ ansible_user_id }}
   sudo: yes
 
 - name: set permission to bin files
@@ -11,8 +11,8 @@
     path={{ item }}
     state=file
     mode=0755
-    owner=pi
-    group=pi
+    owner={{ ansible_user_id }}
+    group={{ ansible_user_id }}
   with_items:
     - /opt/airpippi/bin/processcheck.sh
     - /opt/airpippi/bin/twittercrawler.py
@@ -22,8 +22,8 @@
     path=/opt/airpippi/temp.json
     state=touch
     mode=0644
-    owner=pi
-    group=pi
+    owner={{ ansible_user_id }}
+    group={{ ansible_user_id }}
 
 - name: touch twitterauth.json
   file: >
@@ -39,8 +39,8 @@
     src=twitterapp.j2
     dest=/opt/airpippi/twitterapp.json
     mode=0444
-    owner=pi
-    group=pi
+    owner={{ ansible_user_id }}
+    group={{ ansible_user_id }}
 
 - name: setting up cronjob for templogger
   cron: >
