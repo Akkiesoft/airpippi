@@ -22,3 +22,15 @@
     group=root
   with_items: wifi
   notify: restart network-manager
+
+- name: clear network config fies
+  copy: >
+    src={{ item.src }}
+    dest={{ item.dest }}
+    backup=yes
+  with_items:
+    - src: wifi/interfaces
+      dest: /etc/network/interfaces
+    - src: wifi/wpa_supplicant.conf
+      dest: /etc/wpa_supplicant/wpa_supplicant.conf
+  sudo: yes
