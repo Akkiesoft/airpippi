@@ -9,6 +9,14 @@
     dest=/home/{{ ansible_user_id }}/
     copy=no
 
+- name: get patch for RPi2
+  get_url: >
+    url=https://raw.githubusercontent.com/doublebind/raspi/master/webiopi-pi2bplus.patch
+    dest=/home/{{ ansible_user_id }}/WebIOPi-0.7.1/
+
+- name: patch it
+  command: patch -p1 -i webiopi-pi2bplus.patch chdir=/home/{{ ansible_user_id }}/WebIOPi-0.7.1
+
 - name: rewrite installer to silent install
   lineinfile: >
     dest=/home/{{ ansible_user_id }}/WebIOPi-0.7.1/setup.sh
