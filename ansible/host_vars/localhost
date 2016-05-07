@@ -1,8 +1,10 @@
 ---
 ds18b20_id: 28-000001234567
 
-airpippi_api_user: airpippi
-airpippi_api_pass: A1rp1pp1
+# エアぴっぴWeb画面/APIのユーザーパスワード
+# !!省略するとパスワードなしになる!!
+airpippi_user: airpippi
+airpippi_pass: A1rp1pp1
 
 # 下の２行は馬鹿にしか見えない -- @toshi_a
 tw_consumer_key: bI6cwgYJgwQibk0xJUSSsaUON

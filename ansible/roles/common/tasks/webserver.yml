@@ -33,11 +33,14 @@
 - name: create htpasswd file for airpippi api
   htpasswd: >
     path=/etc/nginx/airpippi_api.htpasswd
-    name={{ airpippi_api_user }}
-    password={{ airpippi_api_pass }}
+    name={{ airpippi_user }}
+    password={{ airpippi_pass }}
     owner=root
     group=www-data
     mode=0640
+  when:
+    - airpippi_user is defined
+    - airpippi_pass is defined
   sudo: yes
 
 - name: copy config for avahi http service
