@@ -43,20 +43,6 @@ Raspberry PiのOSはRaspbianを前提としています。SDカードのサイ�
 
 また、後述のAnsibleによるインストールのため、あらかじめSSH公開鍵を登録してください。
 
-### WebIOPi
-
-WebIOPi 0.7.1のみ、別途用意をしてください。
-
-https://code.google.com/p/webiopi/
-
-roles/common/files/WebIOPi-0.7.1.tar.gzとして配置します。
-
- ```
- ※現状では、後述のAnsibleでインストールを実行しても失敗します。失敗した後に、インストール先のホームディレクトリに展開されたWebIOPiを手動でインストールしてください。
- 
- $ sudo ./setup.sh
- ```
-
 ## インストール
 
 Ansibleを使用しています。
