@@ -50,7 +50,12 @@ server {
 		# With php5-fpm:
 		fastcgi_pass unix:/var/run/php5-fpm.sock;
 		fastcgi_index index.php;
+{% if ansible_distribution_release == "wheezy" %}
 		include fastcgi_params;
+{% elif ansible_distribution_release == "jessie" %}
+		include fastcgi.conf;
+{% endif %}
+
 	}
 
 }

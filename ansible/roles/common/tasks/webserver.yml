@@ -24,8 +24,8 @@
   sudo: yes
 
 - name: copy nginx siteconfig
-  copy: >
-    src=default
+  template: >
+    src=default.j2
     dest=/etc/nginx/sites-available/default
   notify: restart nginx
   sudo: yes
