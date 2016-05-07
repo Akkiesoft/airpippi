@@ -34,7 +34,7 @@ server {
 		# Uncomment to enable naxsi on this location
 		# include /etc/nginx/naxsi.rules
 	}
-	location /api {
+	location ~ /api {
 		auth_basic "Restricted";
 		auth_basic_user_file /etc/nginx/airpippi_api.htpasswd;
 	}
