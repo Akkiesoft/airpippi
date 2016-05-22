@@ -70,27 +70,32 @@ $time = json_encode($time_raw, JSON_NUMERIC_CHECK);
         <canvas id="graph" style="width:100%;height:400px;"></canvas>
         <script src="js/Chart.min.js"></script>
         <script>
+var ctx = document.getElementById("graph").getContext("2d");
 var temp = {
   labels : <?php print $time; ?>,
   datasets : [{
-    fillColor: "rgba(151,187,205,0.2)",
-    strokeColor: "rgba(151,187,205,1)",
-    pointColor: "rgba(151,187,205,1)",
-    pointStrokeColor: "#fff",
-    pointHighlightFill: "#fff",
-    pointHighlightStroke: "rgba(151,187,205,1)",
+    backgroundColor: "rgba(151,187,205,0.2)",
+    borderColor: "rgba(151,187,205,1)",
+    pointRadius: 3.5,
+    pointBackgroundColor: "rgba(151,187,205,1)",
+    pointBorderColor: "#fff",
+    pointHoverBackgroundColor: "#fff",
+    pointHoverBorderColor: "rgba(151,187,205,1)",
     data: <?php print $temp; ?>
   }]
 };
-var ctx = document.getElementById("graph").getContext("2d");
-var tempChart = new Chart(ctx).Line(temp, {
-  animation       : false,
-  responsive      : false,
-  scaleShowLabels : true,
-  scaleOverride   : true,
-  scaleSteps      : 15,
-  scaleStartValue : 10,
-  scaleStepWidth  : 2,
+var options = {
+  responsive : true,
+// BUG: https://github.com/chartjs/Chart.js/issues/2582
+//  maintainAspectRatio: false,
+  animation  : { duration : 0 },
+  legend     : { display  : false },
+  scales     : { yAxes : [{ ticks: { min: 10, max: 40 } }] }
+}
+var tempChart = new Chart(ctx, {
+  type    : 'line',
+  data    : temp,
+  options : options
 });
         </script>
 <?php } ?>
