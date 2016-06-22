@@ -130,7 +130,7 @@
 	<div id="ret_timer" class="hidden" role="alert"></div>
         <p><form method="post" action="/">
           <div class="input-group">
-            <input type="text" name="time" id="time" class="form-control" placeholder="分単位で時間を指定...">
+            <input type="number" name="time" id="time" class="form-control" placeholder="分単位で時間を指定...">
             <span class="input-group-btn">
               <button type="submit" name="timerset" class="btn btn-default" onclick="timer();return false">セット</button>
             </span>
@@ -138,7 +138,8 @@
         </form></p>
 
     </div>
-
+    <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+    <br><br><br>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
