@@ -67,7 +67,7 @@ $time = json_encode($time_raw, JSON_NUMERIC_CHECK);
             <h1><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> 室温ログ</h1>
         </div>
 <?php if ($error) { print $error; } else { ?>
-        <canvas id="graph" style="width:100%;height:400px;"></canvas>
+        <div style="width:100%;height:400px;"><canvas id="graph"></canvas></div>
         <script src="js/Chart.min.js"></script>
         <script>
 var ctx = document.getElementById("graph").getContext("2d");
@@ -86,8 +86,7 @@ var temp = {
 };
 var options = {
   responsive : true,
-// BUG: https://github.com/chartjs/Chart.js/issues/2582
-//  maintainAspectRatio: false,
+  maintainAspectRatio: false,
   animation  : { duration : 0 },
   legend     : { display  : false },
   scales     : { yAxes : [{ ticks: { min: 10, max: 40 } }] }
