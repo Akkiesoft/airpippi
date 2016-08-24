@@ -47,6 +47,11 @@
     name="temp logger"
     job="/usr/bin/php /opt/airpippi/bin/templogger.php"
 
+- name: setting up cronjob for job scheduler
+  cron: >
+    name="job scheduler"
+    job="/usr/bin/php /opt/airpippi/bin/jobsched.php"
+
 - name: setting up cronjob for procces check twitter crawler
   cron: >
     name="twitter crawler process check"
