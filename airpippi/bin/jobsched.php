@@ -3,10 +3,10 @@
 require_once '/opt/airpippi/config.php';
 require_once '/opt/airpippi/bin/rungpio.php';
 
-$json_raw = file_get_contents("/opt/airpippi/joblist.json");
+$json_raw = file_get_contents($joblist_json_path);
 $json = json_decode($json_raw);
 
-foreach ($json->list as $item) {
+foreach ($json as $item) {
 	# is enabled?
 	if (! $item->enabled) continue;
 

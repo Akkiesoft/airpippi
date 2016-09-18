@@ -10,6 +10,7 @@ $webiopi_passwd = 'A1rp1pp1';
 $webiopi_gpio   = '17';
 
 $temp_json_path = '/opt/airpippi/temp.json';
+$joblist_json_path = '/opt/airpippi/joblist.json';
 $twitter_auth_file = '/opt/airpippi/twitterauth.json';
 
 $raw = file_get_contents('/opt/airpippi/twitterapp.json');

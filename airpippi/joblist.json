@@ -1,5 +1,5 @@
-{
-	"list": [{
+[
+	{
 		"name": "朝の電源オン",
 		"dow": {
 			"mon": true,
@@ -29,5 +29,5 @@
 		"min": 45,
 		"task": 0,
 		"enabled": false
-	}]
-}
+	}
+]
