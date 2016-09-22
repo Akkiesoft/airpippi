@@ -4,7 +4,7 @@
     dest=/opt/
     owner={{ ansible_user_id }}
     group={{ ansible_user_id }}
-  sudo: yes
+  become: yes
 
 - name: set permission to bin files
   file: >
@@ -32,7 +32,7 @@
     mode=0644
     owner=www-data
     group=pi
-  sudo: yes
+  become: yes
 
 - name: touch joblist.json
   file: >
@@ -41,7 +41,7 @@
     mode=0644
     owner=www-data
     group=pi
-  sudo: yes
+  become: yes
 
 - name: copy json file for twitter app
   template: >
@@ -71,4 +71,4 @@
     dest=/boot/config.txt
     line="dtoverlay=w1-gpio"
     state=present
-  sudo: yes
+  become: yes

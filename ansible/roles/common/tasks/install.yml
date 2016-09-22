@@ -13,7 +13,7 @@
     - python-dev
     - python-setuptools
     - vim
-  sudo: yes
+  become: yes
 
 - name: enabled services
   service: >
@@ -24,17 +24,17 @@
     - avahi-daemon
     - nginx
     - php5-fpm
-  sudo: yes
+  become: yes
 
 - name: install pip
   easy_install: name=pip
-  sudo: yes
+  become: yes
 
 - name: install pythoon modules
   pip: >
     name={{ item }}
     state=present
-  sudo: yes
+  become: yes
   with_items:
     - tweepy
     - passlib

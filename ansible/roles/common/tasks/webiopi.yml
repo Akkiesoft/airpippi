@@ -8,7 +8,7 @@
     - python3
     - python3-pip
     - python3-rpi.gpio
-  sudo: yes
+  become: yes
 
 - name: get webiopi
   get_url: >
@@ -40,24 +40,24 @@
   command: /home/{{ ansible_user_id }}/WebIOPi-0.7.1/setup.sh
   args:
     chdir: /home/{{ ansible_user_id }}/WebIOPi-0.7.1
-  sudo: yes
+  become: yes
 
 - name: setting up webiopi config
   template: >
     src=config.j2
     dest=/etc/webiopi/config
   notify: restart webiopi
-  sudo: yes
+  become: yes
 
 - name: copy webiopi password
   copy: >
     src=passwd
     dest=/etc/webiopi/passwd
   notify: restart webiopi
-  sudo: yes
+  become: yes
 
 - name: enabled webiopi service
   service: >
     name=webiopi
     enabled=yes
-  sudo: yes
+  become: yes

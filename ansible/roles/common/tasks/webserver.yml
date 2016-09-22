@@ -5,7 +5,7 @@
     - HTTP_Request2-2.2.0
     - HTTP_OAuth-0.3.1
   ignore_errors: yes
-  sudo: yes
+  become: yes
 
 - name: set timezone to PHP
   lineinfile: >
@@ -13,7 +13,7 @@
     insertafter="; date.timezone ="
     line="date.timezone = Asia/Tokyo"
   notify: restart php5-fpm
-  sudo: yes
+  become: yes
 
 - name: remove www-data from /etc/at.deny for timer control
   lineinfile: >
@@ -21,14 +21,14 @@
     line="www-data"
     state=absent
   notify: restart atd
-  sudo: yes
+  become: yes
 
 - name: copy nginx siteconfig
   template: >
     src=default.j2
     dest=/etc/nginx/sites-available/default
   notify: restart nginx
-  sudo: yes
+  become: yes
 
 - name: create htpasswd file for airpippi api
   htpasswd: >
@@ -41,11 +41,11 @@
   when:
     - airpippi_user is defined
     - airpippi_pass is defined
-  sudo: yes
+  become: yes
 
 - name: copy config for avahi http service
   copy: >
     src=http.service
     dest=/etc/avahi/services/http.service
   notify: restart avahi-daemon
-  sudo: yes
+  become: yes
