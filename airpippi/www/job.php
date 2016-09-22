@@ -24,10 +24,9 @@ if (isset($_POST) && count($_POST)) {
     $name  = htmlspecialchars($_POST["new-name"]);
     $hour  = intval($_POST["new-hour"]);
     $min   = intval($_POST["new-min"]);
-    $dow   = str_replace(
-               array("on", ""), array(true, false),
-               $_POST["new-dow"]
-             );
+    foreach($_POST["new-dow"] as $i=>$l) {
+      $dow[$i] = ($l) ? true: false;
+    }
     // JavaScriptがない人向けチェック
     // なお、ココでチェックにかかる稀有なておくれは救済されないので
     // 再度入力が要求される(手抜き)
@@ -113,8 +112,9 @@ if (isset($_GET) && count($_GET)) {
 foreach ($json as $id=>$item) {
   $dow = "";
     $i = 0;
-    foreach($item->dow as $item2) {
-        $dow .= ($item2) ? $dowlabel[$i++]." " : "";
+    foreach($item->dow as $l) {
+        $dow .= ($l === true) ? $dowlabel[$i]." " : "";
+        $i++;
     }
     $status = ($item->enabled) ? "success":"default";
     $jobtime = sprintf("%02d:%02d", $item->hour, $item->min);
@@ -226,7 +226,7 @@ EOM;
           <div class="form-group">
             <label for="new-dow" class="col-sm-2 control-label">曜日</label>
             <div class="col-sm-10" id="dow-grp">
-<?php foreach($dowlabel as $dow) { ?>
+<?php foreach($dowlabel as $i=>$dow) { ?>
               <input type="hidden" name="new-dow[<?php print $dowlabel_en[$i]; ?>]">
               <label class="checkbox-inline">
                 <input type="checkbox" name="new-dow[<?php print $dowlabel_en[$i]; ?>]"><?php print $dow; ?>
