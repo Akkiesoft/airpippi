@@ -55,6 +55,7 @@ $time = json_encode($time_raw, JSON_NUMERIC_CHECK);
           <ul class="nav navbar-nav">
             <li><a href="/">メイン</a></li>
             <li class="active"><a href="temp.php">室温ログ</a></li>
+            <li><a href="job.php">ジョブ管理</a></li>
             <li><a href="settings.php">設定</a></li>
           </ul>
         </div><!--/.nav-collapse -->

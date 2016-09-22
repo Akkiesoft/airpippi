@@ -29,9 +29,18 @@
   file: >
     path=/opt/airpippi/twitterauth.json
     state=touch
-    mode=0666
+    mode=0644
     owner=www-data
-    group=www-data
+    group=pi
+  sudo: yes
+
+- name: touch joblist.json
+  file: >
+    path=/opt/airpippi/joblist.json
+    state=touch
+    mode=0644
+    owner=www-data
+    group=pi
   sudo: yes
 
 - name: copy json file for twitter app
