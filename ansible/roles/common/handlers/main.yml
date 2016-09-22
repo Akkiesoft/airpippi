@@ -17,7 +17,3 @@
 - name: restart avahi-daemon
   action: service name=avahi-daemon state=restarted
   sudo: yes
-
-- name: restart network-manager
-  action: service name=network-manager state=restarted
-  sudo: yes
