@@ -263,6 +263,8 @@ EOM;
 <?php print $joblist; ?>
 </div>
     </div>
+    <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+    <br><br><br>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-2.2.4.min.js"></script>
