@@ -1,7 +1,3 @@
-- name: restart webiopi
-  action: service name=webiopi state=restarted
-  become: yes
-
 - name: restart nginx
   action: service name=nginx state=restarted
   become: yes
