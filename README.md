@@ -29,7 +29,7 @@ Model Aでも、Model Bでも、どのRaspberry Piでも良いです。Raspberry
 
 https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing を参照してください。
 
-接続は、GPIO#17とGNDです。
+接続は、GPIO#17(Ansibleのvarsで変更可能です)とGNDです。
 
 ## 必要なもの(ソフトウェア)
 
@@ -56,6 +56,7 @@ Wi-Fiを使用したい場合はwifiに設定を記述します。使用しな�
  ```
  ---
  ds18b20_id: <DS18B20のID(28-000001234567のように記述)>
+ gpio: 17 <フォトカプラのGPIO番号。必要に応じて変更>
  
  tw_consumer_key: <Twitterのアプリのコンシューマーキー>
  tw_consumer_secret: <Twitterのアプリのコンシューマーシークレットキー>
@@ -79,7 +80,7 @@ Playbookの実行後は、センサーを有効にするために再起動が必
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Akira Ouchi \<akkiesoft -at- marokun.net\> a.k.a. [@Akkiesoft](https://www.twitter.com/Akkiesoft)
+Copyright (c) 2015,2017 Akira Ouchi \<akkiesoft -at- marokun.net\> a.k.a. [@Akkiesoft](https://www.twitter.com/Akkiesoft)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
