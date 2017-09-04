@@ -43,6 +43,14 @@
     group=pi
   become: yes
 
+- name: copy airpippi config file
+  template: >
+    src=config.php
+    dest=/opt/airpippi/config.php
+    mode=0644
+    owner={{ ansible_user_id }}
+    group={{ ansible_user_id }}
+
 - name: copy json file for twitter app
   template: >
     src=twitterapp.j2
