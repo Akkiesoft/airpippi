@@ -1,7 +1,6 @@
 <?php
 // Air Conditioner Remote Script [Server]
-// for WebIOPi (Raspberry Pi GPIO)
-// (c) 2013,2015 Akkiesoft.
+// (c) 2013,2015,2017 Akkiesoft.
 
 require_once '/opt/airpippi/config.php';
 require_once '/opt/airpippi/bin/rungpio.php';
