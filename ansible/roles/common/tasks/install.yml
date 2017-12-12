@@ -12,6 +12,7 @@
     - php-pear
     - python-dev
     - python-setuptools
+    - wiringpi
     - vim
   become: yes
 

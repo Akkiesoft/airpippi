@@ -1,13 +1,10 @@
 <?php
 // Air Conditioner Remote Script [Server]
-// for WebIOPi (Raspberry Pi GPIO)
-// (c) 2013,2015 Akkiesoft.
+// (c) 2013,2015,2017 Akkiesoft.
 
 $redirectTo     = '/';
-$webiopi_host   = 'localhost:8000';
-$webiopi_user   = 'AirPippi';
-$webiopi_passwd = 'A1rp1pp1';
-$webiopi_gpio   = '17';
+$gpio           = '{{ gpio }}';
+$ds18b20        = '{{ ds18b20_id }}';
 
 $temp_json_path = '/opt/airpippi/temp.json';
 $joblist_json_path = '/opt/airpippi/joblist.json';

@@ -1,17 +1,9 @@
 <?php
-require_once 'HTTP/Request2.php';
 require_once '/opt/airpippi/config.php';
 
-try {
-	$req = new HTTP_Request2('http://'.$webiopi_host.'/room/temperature', HTTP_Request2::METHOD_GET);
-	$req->setAuth($webiopi_user, $webiopi_passwd, HTTP_Request2::AUTH_BASIC);
-	$res = $req->send();
-	if ($res->getStatus() == 200) {
-		$temp = $res->getBody();
-	} else { exit(1); }
-} catch (Exception $e) {
-	exit(1);
-}
+$raw = file('/sys/bus/w1/devices/' . $ds18b20 . '/w1_slave', FILE_IGNORE_NEW_LINES);
+$temp = explode('=', $raw[1]);
+$temp = round($temp[1] / 1000, 2);
 
 $item = array(
 	'time' => date("c"),
