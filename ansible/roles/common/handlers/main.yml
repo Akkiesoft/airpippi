@@ -1,15 +1,15 @@
 - name: restart nginx
-  action: service name=nginx state=restarted
+  action: systemd name=nginx state=restarted
   become: yes
 
-- name: restart php5-fpm
-  action: service name=php5-fpm state=restarted
+- name: restart php7.0-fpm
+  action: systemd name=php7.0-fpm state=restarted
   become: yes
 
 - name: restart atd
-  action: service name=atd state=restarted
+  action: systemd name=atd state=restarted
   become: yes
 
 - name: restart avahi-daemon
-  action: service name=avahi-daemon state=restarted
+  action: systemd name=avahi-daemon state=restarted
   become: yes

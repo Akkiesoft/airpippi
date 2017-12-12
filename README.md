@@ -35,11 +35,11 @@ https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-
 
 ### Ansibleがインストールされたマシン
 
-インストールにはAnsible 1.9以上を使用します。インストール方法は後述します。
+インストールにはAnsible 2.0以上を使用します。インストール方法は後述します。
 
 ### Raspbian
 
-Raspberry PiのOSはRaspbianを前提としています。SDカードのサイズはRaspbianの要件に準じます。
+Raspberry PiのOSはRaspbian Stretchを前提としています。SDカードのサイズはRaspbianの要件に準じます。
 
 また、後述のAnsibleによるインストールのため、あらかじめSSH公開鍵を登録してください。
 
@@ -71,7 +71,7 @@ Wi-Fiを使用したい場合はwifiに設定を記述します。使用しな�
 Playbookの実行は以下のとおりです。
 
  ```
- $ ansible-playbook -i production -u pi site.yml
+ $ ansible-playbook -i production -u pi all.yml
  ```
 
 Playbookの実行後は、センサーを有効にするために再起動が必要です。

@@ -8,23 +8,22 @@
     - at
     - avahi-daemon
     - nginx
-    - php5-fpm
+    - php7.0-fpm
     - php-pear
     - python-dev
     - python-setuptools
     - wiringpi
-    - vim
   become: yes
 
 - name: enabled services
-  service: >
+  systemd: >
     name={{ item }}
     enabled=yes
   with_items:
     - atd
     - avahi-daemon
     - nginx
-    - php5-fpm
+    - php7.0-fpm
   become: yes
 
 - name: install pip

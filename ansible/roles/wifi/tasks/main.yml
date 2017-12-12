@@ -22,7 +22,7 @@
     mode=0600
     owner=root
     group=root
-  with_items: wifi
+  with_items: "{{ wifi }}"
   become: yes
   notify: restart network-manager
 
