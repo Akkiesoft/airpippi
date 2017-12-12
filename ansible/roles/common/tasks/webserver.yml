@@ -1,18 +1,18 @@
-# いい方法が思いつかない
 - name: install pear modules
-  command: pear install {{ item }}
+  pear: >
+    name={{ item }}
+    state=present
   with_items:
-    - HTTP_Request2-2.2.0
-    - HTTP_OAuth-0.3.1
-  ignore_errors: yes
+    - HTTP_Request2
+    - HTTP_OAuth
   become: yes
 
 - name: set timezone to PHP
   lineinfile: >
-    dest=/etc/php5/fpm/php.ini
+    dest=/etc/php/7.0/fpm/php.ini
     insertafter="; date.timezone ="
     line="date.timezone = Asia/Tokyo"
-  notify: restart php5-fpm
+  notify: restart php7.0-fpm
   become: yes
 
 - name: remove www-data from /etc/at.deny for timer control
