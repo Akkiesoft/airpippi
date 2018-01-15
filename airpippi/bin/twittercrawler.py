@@ -45,6 +45,31 @@ def getTimer(text):
 		return search_time.group(1)
 	return -1;
 
+
+def run_command(text):
+	result = []
+
+	if u"電源" in text:
+		os.system("/usr/bin/php /opt/airpippi/bin/rungpio.php rungpio")
+		result.append(u"電源を操作しました。")
+
+	if u"室温" in text:
+		temp = getTemp()
+		temp = u"わからない" if temp < 0 else str(temp) + u"℃"
+		result.append(u" 今の室温は" + temp + u"です。")
+
+	if u"タイマー" in text:
+		msg = ""
+		timer = getTimer(text)
+		if timer < 0:
+			msg = u"何分後にタイマー実行するか指定してください。"
+		else:
+			os.system("echo '/usr/bin/php /opt/airpippi/bin/rungpio.php rungpio' | /usr/bin/at now +" + timer + "minute");
+			msg = timer + u"分後くらいにタイマー実行します。"
+		result.append(msg)
+
+	return result
+
 def load_authconfig():
 	try:
 		f = open('/opt/airpippi/twitterauth.json', 'r')
@@ -92,37 +117,12 @@ class CustomStreamListener(tweepy.StreamListener):
 				return True
 
 		now = datetime.datetime.today().strftime(" (%Y/%m/%d %H:%M:%S)")
-
-		if u"電源" in status.text:
-			os.system("/usr/bin/php /opt/airpippi/bin/rungpio.php rungpio")
+		result = run_command(status.text)
+		for i in result:
 			api.update_status(
-				status = "@" + sn + u" 電源を操作しました。" + now,
+				status = "@" + sn + i + now,
 				in_reply_to_status_id = status.id
 			)
-
-		if u"室温" in status.text:
-			temp = getTemp()
-			if temp < 0:
-				temp = u"わからない"
-			else:
-				temp += u"℃"
-			api.update_status(
-				status = "@" + sn + u" 今の室温は" + temp + u"です。" + now,
-				in_reply_to_status_id = status.id
-			)
-
-		if u"タイマー" in status.text:
-			timer = getTimer(status.text)
-			if timer < 0:
-				msg = u"何分後にタイマー実行するか指定してください。"
-			else:
-				os.system("echo '/usr/bin/php /opt/airpippi/bin/rungpio.php rungpio' | /usr/bin/at now +" + timer + "minute");
-				msg = timer + u"分後くらいにタイマー実行します。"
-			api.update_status(
-				status = "@" + sn + " " + msg + now,
-				in_reply_to_status_id = status.id
-			)
-
 
 	def on_error(self, status_code):
 		print >> sys.stderr, 'Airpippi: Encountered error with status code:', status_code
