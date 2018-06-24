@@ -70,6 +70,11 @@
     name="job scheduler"
     job="/usr/bin/php /opt/airpippi/bin/jobsched.php"
 
+- name: setting up cronjob for twittercrawler
+  cron: >
+    name="Twitter crawler"
+    job="/usr/bin/python /opt/airpippi/bin/twittercrawler.py"
+
 - name: enable 1-wire
   lineinfile: >
     dest=/boot/config.txt

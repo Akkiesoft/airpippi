@@ -6,6 +6,7 @@
 import os
 import re
 import json
+import datetime
 
 def getTemp():
 	try:
@@ -49,3 +50,51 @@ def run(text):
 		result.append(msg)
 
 	return result
+
+# JSONを読み込む
+def tw_load_authconfig():
+	try:
+		f = open('/opt/airpippi/twitterauth.json', 'r')
+		jsonData = json.load(f)
+		if not "airpippi_twit" in jsonData:
+			# not found "airpippi_twit" key.
+			return -1
+		return jsonData
+	except ValueError:
+		# file not exists.
+		return -1
+	except IOError:
+		# file not exists.
+		return -1
+
+# ツイートをチェックしてコマンド実行してリプライするとこまで
+def tw_check(config, api, status):
+	me = "@"+config["airpippi_twit"]
+
+	# pass if tweet from airpippi
+	if status.source == u"エアぴっぴ":
+		return True
+	# if not mention in tweet, pass
+	if not me in status.text:
+		return True
+	# get sn
+	sn = status.author.screen_name
+
+	# check allowed user
+	if "accounts" in config:
+		# 大文字小文字の個別はtweepyが厳しく見ているっぽいので無駄だった
+		if not sn in config["accounts"]:
+			return True
+	else:
+		if not sn in config["airpippi_twit"]:
+			return True
+
+	now = datetime.datetime.today().strftime(" (%Y/%m/%d %H:%M:%S)")
+	result = run(status.text)
+	for i in result:
+		api.update_status(
+			status = "@" + sn + " " + i + now,
+			in_reply_to_status_id = status.id
+		)
+	return
+
