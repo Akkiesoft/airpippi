@@ -6,12 +6,16 @@
 # Inspire From:
 #   http://peter-hoffmann.com/2012/simple-twitter-streaming-api-access-with-python-and-oauth.html
 
-import os
 import sys
-import datetime
-import re
 import json
 import tweepy
+import airpippi_cmd
+
+# get config
+config = airpippi_cmd.tw_load_authconfig()
+if config < 0:
+	sys.exit()
+me = "@"+config["airpippi_twit"]
 
 # get consumer key
 try:
@@ -26,112 +30,32 @@ except IOError:
 	# file not exists.
 	sys.exit()
 
-
-def getTemp():
-	try:
-		f = open('/opt/airpippi/temp.json', 'r')
-		tempData = json.load(f)
-		if "data" in tempData and "temp" in tempData["data"][0]:
-			return tempData["data"][0]["temp"]
-	except IOError:
-		# file not exists.
-		return -1
-	except ValueError:
-		return -1
-
-def getTimer(text):
-	search_time = re.search(u"([0-9]+)分", text)
-	if search_time != None:
-		return search_time.group(1)
-	return -1;
-
-def load_authconfig():
-	try:
-		f = open('/opt/airpippi/twitterauth.json', 'r')
-		jsonData = json.load(f)
-		if not "airpippi_twit" in jsonData:
-			# not found "airpippi_twit" key.
-			return -1
-		return jsonData
-	except IOError:
-		# file not exists.
-		return -1
-
-jsonData = load_authconfig()
-if jsonData < 0:
-	sys.exit()
-me = "@"+jsonData["airpippi_twit"]
-
 # connect to twitter
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(jsonData["access_token"], jsonData["access_secret"])
+auth.set_access_token(config["access_token"], config["access_secret"])
 api = tweepy.API(auth)
 
-# define class
-class CustomStreamListener(tweepy.StreamListener):
-	def on_status(self, status):
-		# pass if tweet from airpippi
-		if status.source == u"エアぴっぴ":
-			return True
-		# if not mention in tweet, pass
-		if not me in status.text:
-			return True
-		# get sn
-		sn = status.author.screen_name
-		# reload config
-		jsonData = load_authconfig()
-		if jsonData < 0:
-			sys.exit()
-		# check allowed user
-		if "accounts" in jsonData:
-			# 大文字小文字の個別はtweepyが厳しく見ているっぽいので無駄だった
-			if not sn in jsonData["accounts"]:
-				return True
-		else:
-			if not sn in jsonData["airpippi_twit"]:
-				return True
+# 最後にチェックしたツイートIDをファイルから読む
+try:
+	f = open("/opt/airpippi/twitter_last_id.dat", 'r')
+	since = f.read()
+	f.close()
+except IOError:
+	since = ""
+if since and since > 0:
+	# 最後にチェックしたidがある
+	tl = api.mentions_timeline(since_id = since)
+else:
+	# なんもないのでとりあえずデフォルト値で取る
+	tl = api.mentions_timeline()
 
-		now = datetime.datetime.today().strftime(" (%Y/%m/%d %H:%M:%S)")
+# 古いツイートから読んでいく
+for status in tl[::-1]:
+  airpippi_cmd.tw_check(config, api, status)
 
-		if u"電源" in status.text:
-			os.system("/usr/bin/php /opt/airpippi/bin/rungpio.php rungpio")
-			api.update_status(
-				status = "@" + sn + u" 電源を操作しました。" + now,
-				in_reply_to_status_id = status.id
-			)
+# 最後にチェックしたツイートIDを更新
+if len(tl) > 0:
+  f = open("/opt/airpippi/twitter_last_id.dat", 'w')
+  f.write(str(tl[0].id))
+  f.close()
 
-		if u"室温" in status.text:
-			temp = getTemp()
-			if temp < 0:
-				temp = u"わからない"
-			else:
-				temp += u"℃"
-			api.update_status(
-				status = "@" + sn + u" 今の室温は" + temp + u"です。" + now,
-				in_reply_to_status_id = status.id
-			)
-
-		if u"タイマー" in status.text:
-			timer = getTimer(status.text)
-			if timer < 0:
-				msg = u"何分後にタイマー実行するか指定してください。"
-			else:
-				os.system("echo '/usr/bin/php /opt/airpippi/bin/rungpio.php rungpio' | /usr/bin/at now +" + timer + "minute");
-				msg = timer + u"分後くらいにタイマー実行します。"
-			api.update_status(
-				status = "@" + sn + " " + msg + now,
-				in_reply_to_status_id = status.id
-			)
-
-
-	def on_error(self, status_code):
-		print >> sys.stderr, 'Airpippi: Encountered error with status code:', status_code
-		return True # Don't kill the stream
-
-	def on_timeout(self):
-		print >> sys.stderr, 'Airpippi: Timeout...'
-		return True # Don't kill the stream
-
-# start user stream
-sapi = tweepy.streaming.Stream(auth, CustomStreamListener())
-sapi.userstream()

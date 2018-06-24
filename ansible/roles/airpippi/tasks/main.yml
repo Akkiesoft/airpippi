@@ -1,3 +1,5 @@
+- import_tasks: deprecated.yml
+
 - name: install airpippi
   copy: >
     src=airpippi
@@ -14,7 +16,6 @@
     owner={{ ansible_user_id }}
     group={{ ansible_user_id }}
   with_items:
-    - /opt/airpippi/bin/processcheck.sh
     - /opt/airpippi/bin/twittercrawler.py
 
 - name: touch temp.json
@@ -69,10 +70,10 @@
     name="job scheduler"
     job="/usr/bin/php /opt/airpippi/bin/jobsched.php"
 
-- name: setting up cronjob for procces check twitter crawler
+- name: setting up cronjob for twittercrawler
   cron: >
-    name="twitter crawler process check"
-    job="/opt/airpippi/bin/processcheck.sh"
+    name="Twitter crawler"
+    job="/usr/bin/python /opt/airpippi/bin/twittercrawler.py"
 
 - name: enable 1-wire
   lineinfile: >
