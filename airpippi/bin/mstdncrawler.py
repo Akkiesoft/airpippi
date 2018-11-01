@@ -44,15 +44,15 @@ mstdn = Mastodon(
 )
 
 class MaStreamListener(StreamListener):
-  def on_update(self, status):
+  def on_notification(self, status):
     try:
       # pass if toot from airpippi
-      if status['application'] != None and status['application']['name'] == u"エアぴっぴ":
+      if status['status']['application'] != None and status['status']['application']['name'] == u"エアぴっぴ":
         return True
       # if not mention in tweet, pass
-      if not me in status['content']:
+      if not me in status['status']['content']:
         return True
-      if status['mentions'].count == 0:
+      if status['status']['mentions'].count == 0:
         return True
       # get sn
       sn = status['account']['acct']
@@ -69,18 +69,18 @@ class MaStreamListener(StreamListener):
           return True
 
       now = datetime.datetime.today().strftime(" (%Y/%m/%d %H:%M:%S)")
-      result = airpippi_cmd.run(status['content'])
+      result = airpippi_cmd.run(status['status']['content'])
       for i in result:
         mstdn.status_post(
           status = "@" + sn + " " + i + now,
-          in_reply_to_id = status['id'],
+          in_reply_to_id = status['status']['id'],
           visibility = "direct"
         )
-
     except KeyError:
       pass
 
 try:
-  mstdn.stream_user(MaStreamListener(), async=False)
+  print("start streaming.")
+  mstdn.stream_user(MaStreamListener(), run_async=False, reconnect_async=True, reconnect_async_wait_sec=60)
 except(KeyboardInterrupt):
   print("exit.")
