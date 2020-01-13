@@ -9,7 +9,7 @@ function runGPIO() {
 	exec("gpio -g write " . $gpio . " 1");
 	usleep(200000);
 	exec("gpio -g write " . $gpio . " 0");
-	return 1;
+	return 0;
 }
 
 /* for AT command. */
