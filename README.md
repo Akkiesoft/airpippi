@@ -108,9 +108,6 @@ THE SOFTWARE.
 * jQuery
     * Copyright (c) jQuery Foundation
     * MIT License(see https://jquery.org/license/ )
-* fetch.js
-    * Copyright (c) 2014-2015 GitHub, Inc.
-    * MIT License(see https://github.com/github/fetch/blob/master/LICENSE )
 * Chart.js
     *Copyright (c) 2013-2016 Nick Downie
     * MIT License(see https://github.com/nnnick/Chart.js/blob/master/LICENSE.md )

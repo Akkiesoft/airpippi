@@ -34,7 +34,6 @@ htmlhead("/");
     <!-- iOSのボタンがニョキッと出てくるのを回避 -->
     <br><br><br>
 
-    <script src="js/fetch.js"></script>
     <script src="js/airpippi.js"></script>
     <script>airpippi_temp();</script>
 
