@@ -35,11 +35,11 @@ https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-
 
 ### Ansibleがインストールされたマシン
 
-インストールにはAnsible 2.0以上を使用します。インストール方法は後述します。
+インストールにはAnsible 2.9以上を使用します。インストール方法は後述します。
 
 ### Raspbian
 
-Raspberry PiのOSはRaspbian Stretchを前提としています。SDカードのサイズはRaspbianの要件に準じます。
+Raspberry PiのOSはRaspbian Busterを前提としています。SDカードのサイズはRaspbianの要件に準じます。
 
 また、後述のAnsibleによるインストールのため、あらかじめSSH公開鍵を登録してください。
 

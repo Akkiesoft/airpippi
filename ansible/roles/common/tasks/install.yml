@@ -4,7 +4,7 @@
     - at
     - avahi-daemon
     - nginx
-    - php7.0-fpm
+    - php7.3-fpm
     - php-pear
     - python-dev
     - python-setuptools
@@ -22,7 +22,7 @@
     - atd
     - avahi-daemon
     - nginx
-    - php7.0-fpm
+    - php7.3-fpm
   become: yes
 
 - name: install python modules

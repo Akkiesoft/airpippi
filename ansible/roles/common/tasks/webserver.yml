@@ -9,10 +9,10 @@
 
 - name: set timezone to PHP
   lineinfile:
-    dest: /etc/php/7.0/fpm/php.ini
+    dest: /etc/php/7.3/fpm/php.ini
     insertafter: "; date.timezone ="
     line: "date.timezone = Asia/Tokyo"
-  notify: restart php7.0-fpm
+  notify: restart php7.3-fpm
   become: yes
 
 - name: remove www-data from /etc/at.deny for timer control
