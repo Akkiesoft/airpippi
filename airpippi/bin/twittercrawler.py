@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Airpippi twitter crawler
@@ -13,7 +13,7 @@ import airpippi_cmd
 
 # get config
 config = airpippi_cmd.tw_load_authconfig()
-if config < 0:
+if len(config) < 0:
 	sys.exit()
 me = "@"+config["airpippi_twit"]
 
@@ -42,7 +42,7 @@ try:
 	f.close()
 except IOError:
 	since = ""
-if since and since > 0:
+if since and int(since) > 0:
 	# 最後にチェックしたidがある
 	tl = api.mentions_timeline(since_id = since)
 else:

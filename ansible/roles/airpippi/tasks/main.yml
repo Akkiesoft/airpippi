@@ -71,7 +71,7 @@
 - name: setting up cronjob for twittercrawler
   cron:
     name: "Twitter crawler"
-    job: "/usr/bin/python /opt/airpippi/bin/twittercrawler.py"
+    job: "/usr/bin/python3 /opt/airpippi/bin/twittercrawler.py"
 
 - name: enable 1-wire
   lineinfile:
