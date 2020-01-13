@@ -1,51 +1,51 @@
 - name: install pear modules
-  pear: >
-    name={{ item }}
-    state=present
+  pear:
+    name: "{{ item }}"
+    state: present
   with_items:
     - HTTP_Request2
-    - HTTP_OAuth
+    - HTTP_OAuth-0.3.2
   become: yes
 
 - name: set timezone to PHP
-  lineinfile: >
-    dest=/etc/php/7.0/fpm/php.ini
-    insertafter="; date.timezone ="
-    line="date.timezone = Asia/Tokyo"
+  lineinfile:
+    dest: /etc/php/7.0/fpm/php.ini
+    insertafter: "; date.timezone ="
+    line: "date.timezone = Asia/Tokyo"
   notify: restart php7.0-fpm
   become: yes
 
 - name: remove www-data from /etc/at.deny for timer control
-  lineinfile: >
-    dest=/etc/at.deny
-    line="www-data"
-    state=absent
+  lineinfile:
+    dest: /etc/at.deny
+    line: "www-data"
+    state: absent
   notify: restart atd
   become: yes
 
 - name: copy nginx siteconfig
-  template: >
-    src=default.j2
-    dest=/etc/nginx/sites-available/default
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
   notify: restart nginx
   become: yes
 
 - name: create htpasswd file for airpippi api
-  htpasswd: >
-    path=/etc/nginx/airpippi_api.htpasswd
-    name={{ airpippi_user }}
-    password={{ airpippi_pass }}
-    owner=root
-    group=www-data
-    mode=0640
+  htpasswd:
+    path: /etc/nginx/airpippi_api.htpasswd
+    name: "{{ airpippi_user }}"
+    password: "{{ airpippi_pass }}"
+    owner: root
+    group: www-data
+    mode: 0640
   when:
     - airpippi_user is defined
     - airpippi_pass is defined
   become: yes
 
 - name: copy config for avahi http service
-  copy: >
-    src=http.service
-    dest=/etc/avahi/services/http.service
+  copy:
+    src: http.service
+    dest: /etc/avahi/services/http.service
   notify: restart avahi-daemon
   become: yes

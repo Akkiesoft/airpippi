@@ -1,83 +1,81 @@
 - import_tasks: deprecated.yml
 
 - name: install airpippi
-  copy: >
-    src=airpippi
-    dest=/opt/
-    owner={{ ansible_user_id }}
-    group={{ ansible_user_id }}
+  copy:
+    src: airpippi
+    dest: /opt/
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
   become: yes
 
 - name: set permission to bin files
-  file: >
-    path={{ item }}
-    state=file
-    mode=0755
-    owner={{ ansible_user_id }}
-    group={{ ansible_user_id }}
-  with_items:
-    - /opt/airpippi/bin/twittercrawler.py
+  file:
+    path: /opt/airpippi/bin/twittercrawler.py
+    state: file
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
 
 - name: touch temp.json
-  file: >
-    path=/opt/airpippi/temp.json
-    state=touch
-    mode=0644
-    owner={{ ansible_user_id }}
-    group={{ ansible_user_id }}
+  file:
+    path: /opt/airpippi/temp.json
+    state: touch
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
 
 - name: touch twitterauth.json
-  file: >
-    path=/opt/airpippi/twitterauth.json
-    state=touch
-    mode=0644
-    owner=www-data
-    group=pi
+  file:
+    path: /opt/airpippi/twitterauth.json
+    state: touch
+    mode: 0644
+    owner: www-data
+    group: pi
   become: yes
 
 - name: touch joblist.json
-  file: >
-    path=/opt/airpippi/joblist.json
-    state=touch
-    mode=0644
-    owner=www-data
-    group=pi
+  file:
+    path: /opt/airpippi/joblist.json
+    state: touch
+    mode: 0644
+    owner: www-data
+    group: pi
   become: yes
 
 - name: copy airpippi config file
-  template: >
-    src=config.php
-    dest=/opt/airpippi/config.php
-    mode=0644
-    owner={{ ansible_user_id }}
-    group={{ ansible_user_id }}
+  template:
+    src: config.php
+    dest: /opt/airpippi/config.php
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
 
 - name: copy json file for twitter app
-  template: >
-    src=twitterapp.j2
-    dest=/opt/airpippi/twitterapp.json
-    mode=0444
-    owner={{ ansible_user_id }}
-    group={{ ansible_user_id }}
+  template:
+    src: twitterapp.j2
+    dest: /opt/airpippi/twitterapp.json
+    mode: 0444
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
 
 - name: setting up cronjob for templogger
-  cron: >
-    name="temp logger"
-    job="/usr/bin/php /opt/airpippi/bin/templogger.php"
+  cron:
+    name: "temp logger"
+    job: "/usr/bin/php /opt/airpippi/bin/templogger.php"
 
 - name: setting up cronjob for job scheduler
-  cron: >
-    name="job scheduler"
-    job="/usr/bin/php /opt/airpippi/bin/jobsched.php"
+  cron:
+    name: "job scheduler"
+    job: "/usr/bin/php /opt/airpippi/bin/jobsched.php"
 
 - name: setting up cronjob for twittercrawler
-  cron: >
-    name="Twitter crawler"
-    job="/usr/bin/python /opt/airpippi/bin/twittercrawler.py"
+  cron:
+    name: "Twitter crawler"
+    job: "/usr/bin/python /opt/airpippi/bin/twittercrawler.py"
 
 - name: enable 1-wire
-  lineinfile: >
-    dest=/boot/config.txt
-    line="dtoverlay=w1-gpio"
-    state=present
+  lineinfile:
+    dest: /boot/config.txt
+    line: "dtoverlay=w1-gpio"
+    state: present
   become: yes

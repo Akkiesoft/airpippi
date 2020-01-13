@@ -1,10 +1,6 @@
 - name: install packages
-  apt: >
-    name={{ item }}
-    state=present
-    update_cache=yes
-    cache_valid_time=3600
-  with_items:
+  apt:
+    name:
     - at
     - avahi-daemon
     - nginx
@@ -13,12 +9,15 @@
     - python-dev
     - python-setuptools
     - wiringpi
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
   become: yes
 
 - name: enabled services
-  systemd: >
-    name={{ item }}
-    enabled=yes
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
   with_items:
     - atd
     - avahi-daemon
@@ -26,16 +25,11 @@
     - php7.0-fpm
   become: yes
 
-- name: install pip
-  easy_install: name=pip
+- name: install python modules
+  pip:
+    name:
+      - tweepy
+      - passlib
+    state: present
   become: yes
-
-- name: install pythoon modules
-  pip: >
-    name={{ item }}
-    state=present
-  become: yes
-  with_items:
-    - tweepy
-    - passlib
 # passlib for ansible basic auth module
