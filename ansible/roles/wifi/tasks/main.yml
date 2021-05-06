@@ -21,7 +21,7 @@
     mode: 0600
     owner: root
     group: root
-  with_items: "{{ wifi }}"
+  loop: "{{ wifi }}"
   notify: restart network-manager
   become: yes
 
@@ -30,7 +30,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     backup: yes
-  with_items:
+  loop:
   - src: interfaces
     dest: /etc/network/interfaces
   - src: wpa_supplicant.conf

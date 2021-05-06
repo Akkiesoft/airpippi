@@ -2,7 +2,7 @@
   pear:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
     - HTTP_Request2
     - HTTP_OAuth-0.3.2
   become: yes

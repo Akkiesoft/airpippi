@@ -19,7 +19,7 @@
   systemd:
     name: "{{ item }}"
     enabled: yes
-  with_items:
+  loop:
     - atd
     - avahi-daemon
     - nginx
