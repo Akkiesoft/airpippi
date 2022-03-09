@@ -1,0 +1,4 @@
+- name: restart nginx
+  systemd: name=nginx state=restarted
+- name: restart airpippi api service
+  systemd: name=airpippi state=restarted

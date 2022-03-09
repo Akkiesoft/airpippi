@@ -1,0 +1,6 @@
+flask
+Mastodon.py
+gpiozero
+piir
+w1thermsensor
+bme680

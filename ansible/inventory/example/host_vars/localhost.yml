@@ -1,0 +1,30 @@
+---
+# Temperature (available: ds18b20,bme680)
+temperature_driver: bme680
+
+# (Optional) If you select ds18b20:
+# Application will automatically detect the sensor.
+# However you can also specify sensor ID.
+# ds18b20_id = 28-xxxxxxxx
+
+# GPIO port for controll powering to air conditioner.
+power_gpio: 4
+
+# GPIO port for controll IR LED
+ir_led_tx: 25
+
+# (Optional) BASIC Authentication for WebUI/API
+# You can disable BASIC auth by comment-out these lines.
+# airpippi_user: airpippi
+# airpippi_pass: A1rp1pp1
+
+# (Optional) for Mastodon bot
+# mastodon:
+#  client_key:
+#  client_secret:
+#  access_token:
+#  domain:
+#  # Allowed users (list)
+#  allowed_users:
+#    - user1@mstdn.example.com
+#    - user2@mstdn.example.com

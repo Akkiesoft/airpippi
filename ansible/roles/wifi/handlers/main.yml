@@ -1,3 +1,0 @@
-- name: restart network-manager
-  action: systemd name=network-manager state=restarted
-  become: yes

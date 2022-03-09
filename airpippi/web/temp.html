@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>室温ログ - エアぴっぴ</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="p-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          エアぴっぴ
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a class="nav-link px-2 text-white" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="temp.html">室温ログ</a></li>
+          <li><a class="nav-link px-2 text-white" href="job.html">ジョブ管理</a></li>
+          <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
+          <li><a class="nav-link px-2 text-white" href="light.html">照明</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pt-5">
+
+    <div id="ret_top" class="visually-hidden" role="alert"></div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-graph-up me-3"></i>室温ログ</h1>
+    </div>
+
+    <div class="mb-5">
+      <div style="width:100%;height:400px;"><canvas id="graph"></canvas></div>
+      <script src="js/chart.min.js"></script>
+    </div>
+  </main>
+
+  <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+  <footer class="mb-3">
+  </footer>
+
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/airpippi.js"></script>
+  <script>
+    function get_log() {
+      return myfetch('/api/temp/log').then(j => {
+        var labels = [];
+        var temps = [];
+        if (j['result'] == 'ok') {
+          //"05\/09 21:34"
+          for (var i = 0; i < j['data'].length; i++) {
+            var d = new Date(j['data'][i]['time']);
+            var l = zerofill_pre(d.getMonth() + 1, 2) + "/" + zerofill_pre(d.getDate(), 2)
+                    + " " + zerofill_pre(d.getHours(), 2) + ":" + zerofill_pre(d.getMinutes(), 2);
+            labels.unshift(l);
+            temps.unshift(j['data'][i]['temp']);
+          }
+          return [labels, temps]
+        } else
+          return false;
+      });
+    }
+
+    get_log().then(templog => {
+      if (!templog)
+        return false;
+      var data = {
+        labels: templog[0],
+        datasets: [{
+          fill: true,
+          backgroundColor: "rgba(151,187,205,0.2)",
+          borderColor: "rgba(151,187,205,1)",
+          pointRadius: 3.5,
+          pointBackgroundColor: "rgba(151,187,205,1)",
+          pointBorderColor: "#fff",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(151,187,205,1)",
+          data: templog[1],
+        }]
+      };
+      const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        plugins: { legend: { display: false } },
+        scales: { y: { min: 10, max: 40 } }
+      }
+      const config = {
+        type: 'line',
+        data: data,
+        options: options
+      };
+      var tempChart = new Chart(
+        document.getElementById('graph'),
+        config
+      );
+    });
+  </script>
+
+</body>
+</html>

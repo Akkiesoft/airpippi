@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>照明 - エアぴっぴ</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+  <header class="p-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          エアぴっぴ
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a class="nav-link px-2 text-white" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-white" href="temp.html">室温ログ</a></li>
+          <li><a class="nav-link px-2 text-white" href="job.html">ジョブ管理</a></li>
+          <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
+          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="light.html">照明</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pt-5">
+
+    <div id="ret_top" class="visually-hidden" role="alert"></div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-lightbulb me-3"></i>照明電源操作</h1>
+    </div>
+
+    <div class="mb-5">
+      <div id="ret_light" class="visually-hidden" role="alert"></div>
+      <p><button name="power" class="btn btn-outline-secondary" onclick="btn('power', 1);return false">照明の電源を操作する</button></p>
+      <p>
+        明るさ:
+        <button name="bright" class="btn btn-outline-secondary" onclick="btn('bright', 1);return false">明</button>
+        <button name="dark" class="btn btn-outline-secondary" onclick="btn('dark', 1);return false">暗</button>
+      <p>
+        調色:
+        <button name="cold" class="btn btn-outline-secondary" onclick="btn('cold', 1);return false">白</button>
+        <button name="warm" class="btn btn-outline-secondary" onclick="btn('warm', 1);return false">暖</button>
+      </p>
+      <p><button name="neru" class="btn btn-outline-secondary" onclick="neru();return false">寝る</button></p>
+    </div>
+
+  </main>
+
+  <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+  <footer class="mb-3">
+  </footer>
+
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/airpippi.js"></script>
+  <script>
+    function btn(b, m) {
+      var result = myfetch('/api/light/' + b, {method: 'post'})
+      .then(function(body) {
+        if (m && body['result'] != "error") {
+          showMessage("ret_light", "alert alert-success", "操作しました", 3000);
+        }
+      });
+      return false;
+    }
+    function neru() {
+      btn('power', 0);
+      setTimeout('btn("power", 0)', 1000);
+      // エラー判定が雑だけどまいっかｗ
+      showMessage("ret_light", "alert alert-success", "おやすみ", 3000);
+      return false;
+    }
+  </script>
+
+</body>
+</html>

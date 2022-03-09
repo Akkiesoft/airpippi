@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>エアぴっぴ</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+  <header class="p-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          エアぴっぴ
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a class="nav-link px-2 text-white" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-white" href="temp.html">室温ログ</a></li>
+          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="job.html">ジョブ管理</a></li>
+          <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
+          <li><a class="nav-link px-2 text-white" href="light.html">照明</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pt-5">
+
+    <div id="ret_top" class="visually-hidden" role="alert"></div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-list-task me-3"></i>ジョブ管理</h1>
+    </div>
+
+    <div class="mb-5">
+      <p>
+        <a type="button" class="btn btn-info" data-bs-toggle="collapse" href="#newjob" role="button"
+          aria-expanded="false" aria-controls="newjob">新規ジョブ追加</a>
+      </p>
+      <div id="newjob" class="collapse card p-3">
+        <form method="post" id="newjobform" class="needs-validation" novalidate>
+          <div class="row mb-3">
+            <label for="new-name" class="col-sm-2 col-form-label">ジョブ名</label>
+            <div class="col-sm-10">
+              <input id="new-name" name="new-name" class="form-control" placeholder="ジョブ名" required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="new-dow" class="col-sm-2 col-form-label">曜日</label>
+            <div class="col-sm-10" id="dow-grp">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-mon" name="new-dow[mon]">
+                <label class="checkbox-inline" for="new-dow-mon">月</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-tue" name="new-dow[tue]">
+                <label class="checkbox-inline" for="new-dow-tue">火</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-wed" name="new-dow[wed]">
+                <label class="checkbox-inline" for="new-dow-wed">水</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-thu" name="new-dow[thu]">
+                <label class="checkbox-inline" for="new-dow-thu">木</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-fri" name="new-dow[fri]">
+                <label class="checkbox-inline" for="new-dow-fri">金</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-sat" name="new-dow[sat]">
+                <label class="checkbox-inline" for="new-dow-sat">土</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="new-dow-sun" name="new-dow[sun]">
+                <label class="checkbox-inline" for="new-dow-sun">日</label>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="new-hour" class="col-sm-2 col-form-label">時間</label>
+            <div class="col-sm-2">
+              <input id="new-hour" name="new-hour" class="form-control" type="number" min="0" max="23" placeholder="時"
+                required>
+              <input id="new-min" name="new-min" class="form-control" type="number" min="0" max="59" placeholder="分"
+                required>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="new-task" class="col-sm-2 col-form-label">実行内容</label>
+            <div class="col-sm-10">
+              <select name="new-task" class="form-select">
+                <option value="0">電源を操作する</option>
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-secondary" name="new" onclick="add_job();return false;"><span
+                  class="bi bi-plus" aria-hidden="true">追加</span></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <h2>ジョブ一覧</h2>
+      <div id="ret_job" class="visually-hidden" role="alert"></div>
+      <div class="accordion" id="joblist"></div>
+    </div>
+
+  </main>
+
+  <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+  <footer class="mb-3">
+  </footer>
+
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/airpippi.js"></script>
+  <script>
+    function enabled_status_icon(enabled) {
+      const e = Number(enabled);
+      const s = ['stop', 'play'];
+      const c = ['secondary', 'success'];
+      return "bi bi-" + s[e] + "-fill text-" + c[e] + " me-3";
+    }
+
+    function enabled_job(job_id, enabled) {
+      opt = {
+        method: 'post',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: 'id=' + job_id + '&enabled=' + enabled
+      };
+      myfetch('/api/job/enabled', opt).then(j => {
+        document.getElementById('jobstatus' + j['jobid']).className = enabled_status_icon(j['enabled']);
+        var enabled_status = (j['enabled'] ? '有効' : '無効');
+        showMessage("ret_job", "alert alert-success", 'ジョブ [' + j['jobname'] + '] を' + enabled_status + 'にしました。', 3000);
+      });
+    }
+
+    function delete_job(job_id) {
+      if (!confirm('削除して良いですか？')) {
+        return false;
+      }
+      opt = {
+        method: 'post',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: 'id=' + job_id
+      };
+      myfetch('/api/job/delete', opt).then(j => {
+        document.getElementById('job' + j['jobid']).remove();
+        showMessage("ret_job", "alert alert-success", 'ジョブ [' + j['jobname'] + '] を削除しました。', 3000);
+      });
+    }
+
+    function insert_job_into_job_list(job_id, job) {
+      const hour = zerofill_pre(job['hour'], 2);
+      const min = zerofill_pre(job['min'], 2);
+
+      const dowlabel_en = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+      const dowlabel = ["月", "火", "水", "木", "金", "土", "日"];
+
+      var dow = '';
+      for (var i = 0; i < dowlabel_en.length; i++) {
+        dow += (job['dow'][dowlabel_en[i]] ? dowlabel[i] + " " : "");
+      }
+      var enabled_status = enabled_status_icon(job['enabled']);
+
+      const JOB_ITEM = `
+    <h3 class="accordion-header" id="jobhead${job_id}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#jobbody${job_id}" aria-expanded="false" aria-controls="jobbody${job_id}">
+        <i id="jobstatus${job_id}" class="${enabled_status}"></i>${job['name']}
+      </button>
+    </h3>
+    <div id="jobbody${job_id}" class="accordion-collapse collapse" aria-labelledby="jobhead${job_id}" data-bs-parent="#joblist">
+      <div class="accordion-body">
+        <div class="row mb-3">
+          <div class="col col-4">曜日</div><div class="col col-8">${dow}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col col-4">時間</div><div class="col col-8">${hour}:${min}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col col-4">実行内容</div><div class="col col-8">${job['task']}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col col-4">ジョブの有効/無効</div>
+          <div class="col col-8"><div class="btn-group" role="group" aria-label="...">
+            <button class="btn btn-success btn-sm" name="enable" onclick="enabled_job('${job_id}', 1)"><i class="bi bi-play-fill"></i></button>
+            <button class="btn btn-outline-secondary btn-sm" name="disable" onclick="enabled_job('${job_id}', 0)"><i class="bi bi-stop-fill"></i></button>
+          </div></div>
+        </div>
+        <div class="row mb-3">
+          <div class="col col-4">ジョブの削除</div>
+          <div class="col col-8"><button class="jobdelete btn btn-danger btn-sm" name="delete" onclick="delete_job('${job_id}')"><i class="bi bi-x"></i></button></div>
+        </div>
+      </div>
+    </div>
+  `;
+      var e = document.createElement('div');
+      e.className = 'accordion-item';
+      e.id = 'job' + job_id;
+      e.innerHTML = JOB_ITEM;
+      document.getElementById('joblist').appendChild(e)
+    }
+
+    function get_job_list() {
+      myfetch('/api/job/list')
+        .then(j => {
+          for ([k, v] of Object.entries(j)) {
+            insert_job_into_job_list(k, v);
+          }
+        })
+    }
+    get_job_list();
+  </script>
+
+</body>
+</html>

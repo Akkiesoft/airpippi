@@ -1,81 +1,70 @@
-- import_tasks: deprecated.yml
+- name: install packages
+  apt:
+    name:
+    - avahi-daemon
+    - nginx
+    - python3-pip
+    - python3-dev
+    - python3-setuptools
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: enable 1-wire
+  command: "raspi-config nonint do_onewire 0"
+
+- name: enable i2c
+  command: "raspi-config nonint do_i2c 0"
+
+- name: create htpasswd file for airpippi
+  htpasswd:
+    path: /etc/nginx/airpippi_api.htpasswd
+    name: "{{ airpippi_user }}"
+    password: "{{ airpippi_pass }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  when:
+    - airpippi_user is defined
+    - airpippi_pass is defined
+
+- name: copy nginx siteconfig
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart nginx
 
 - name: install airpippi
   copy:
     src: airpippi
     dest: /opt/
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-  become: yes
-
-- name: set permission to bin files
-  file:
-    path: /opt/airpippi/bin/twittercrawler.py
-    state: file
-    mode: 0755
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-
-- name: touch temp.json
-  file:
-    path: /opt/airpippi/temp.json
-    state: touch
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
     mode: 0644
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
+    directory_mode: 0755
+  notify: restart airpippi api service
 
-- name: touch twitterauth.json
-  file:
-    path: /opt/airpippi/twitterauth.json
-    state: touch
-    mode: 0644
-    owner: www-data
-    group: pi
-  become: yes
-
-- name: touch joblist.json
-  file:
-    path: /opt/airpippi/joblist.json
-    state: touch
-    mode: 0644
-    owner: www-data
-    group: pi
-  become: yes
-
-- name: copy airpippi config file
+- name: copy config
   template:
-    src: config.php
-    dest: /opt/airpippi/config.php
+    src: airpippi.conf
+    dest: /opt/airpippi/config/airpippi.conf
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
     mode: 0644
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
+  notify: restart airpippi api service
 
-- name: copy json file for twitter app
-  template:
-    src: twitterapp.j2
-    dest: /opt/airpippi/twitterapp.json
-    mode: 0444
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
+- name: install python modules
+  pip:
+    requirements: /opt/airpippi/requirements.txt
 
-- name: setting up cronjob for templogger
-  cron:
-    name: "temp logger"
-    job: "/usr/bin/php /opt/airpippi/bin/templogger.php"
-
-- name: setting up cronjob for job scheduler
-  cron:
-    name: "job scheduler"
-    job: "/usr/bin/php /opt/airpippi/bin/jobsched.php"
-
-- name: setting up cronjob for twittercrawler
-  cron:
-    name: "Twitter crawler"
-    job: "/usr/bin/python3 /opt/airpippi/bin/twittercrawler.py"
-
-- name: enable 1-wire
-  lineinfile:
-    dest: /boot/config.txt
-    line: "dtoverlay=w1-gpio"
-    state: present
-  become: yes
+- name: enabled services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    daemon_reload: yes
+  loop:
+    - nginx
+    - airpippi

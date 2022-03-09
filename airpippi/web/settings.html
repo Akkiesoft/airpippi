@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>設定 - エアぴっぴ</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="p-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          エアぴっぴ
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a class="nav-link px-2 text-white" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-white" href="temp.html">室温ログ</a></li>
+          <li><a class="nav-link px-2 text-white" href="job.html">ジョブ管理</a></li>
+          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="settings.html">設定</a></li>
+          <li><a class="nav-link px-2 text-white" href="light.html">照明</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pt-5">
+
+    <div id="ret_top" class="visually-hidden" role="alert"></div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-gear me-3"></i>設定</h1>
+    </div>
+
+    <div class="mb-5">
+      <h2 class="pb-3 mb-3 border-bottom"><i class="bi bi-mastodon me-3"></i>Mastodon連携</h2>
+      <div id="ret_don" class="visually-hidden" role="alert"></div>
+      <p>ステータス:<i id="don_enabled" class="bi bi-question-circle-fill ms-3 me-2 text-secondary"></i> <span id="don_status"></span></p>
+      <div id="don_options" class="visually-hidden">
+        <p>投稿先アカウント:<span id="don_post_to" class="ms-3"></span></p>
+        <p>メンションを受け付けるアカウント:</p>
+        <form>
+          <div class="mb-3">
+            <textarea class="form-control" id="don_allowed_users" style="height: 5.5em;"></textarea>
+          </div>
+          <div class="mb-3">
+            <button class="form-control" onclick="don_update_allowed_users(); return false;">設定</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+  <footer class="mb-3">
+  </footer>
+
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/airpippi.js"></script>
+  <script>
+    function don_update_allowed_users() {
+      var users = document.getElementById('don_allowed_users').value.trim().replaceAll("\n", ",");
+      myfetch('/api/mastodon/allowed_users', {
+        method: 'post',
+        body: 'users=' + users,
+        headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" }
+      }).then(body => {
+        if (body['result'] == 'ok') {
+          const msg = 'メンションを受け付けるアカウントを更新しました。';
+          showMessage("ret_don", "alert alert-success", msg, 3000);
+        } else {
+          const msg = 'メンションを受け付けるアカウントの更新に失敗しました。';
+          showMessage("ret_don", "alert alert-danger", msg, 3000);
+        }
+        console.log(body);
+      });
+      return false;
+    }
+
+    function don_set_status(msg) {
+      const msg_table = {
+        'configure_is_not_found_or_not_enough': "未設定もしくは設定が不足しています",
+        'failed_to_connect_to_the_mastodon_server': "Mastodonサーバーに接続できません",
+        'failed_to_start_streaming': "ストリーミング接続を開始できません",
+        'mastodon_crawler_started': "連携済・ストリーミング接続中"
+      };
+      const _msg = msg.replaceAll(' ', '_');
+      return msg_table[_msg];
+    }
+
+    function don_get_status() {
+      myfetch('/api/mastodon/status').then(function(body) {
+        console.log(body);
+        var enabled = document.getElementById('don_enabled');
+        var status = document.getElementById('don_status');
+        if (body['result'] != "error") {
+          status.innerText = don_set_status(body['status']);
+          if (body['enabled']) {
+            document.getElementById('don_options').className = "";
+            enabled.className = "bi bi-check-circle-fill ms-3 me-2 text-primary";
+            var post_to = document.getElementById('don_post_to');
+            post_to.innerText = body['config']['account'] + "@" + body['config']['domain'];
+            var allowed_users = document.getElementById('don_allowed_users');
+            allowed_users.value = body['config']['allowed_users'].join("\n");
+          } else {
+            enabled.className = "bi bi-x-circle-fill ms-3 me-2 text-secondary";
+          }
+        }
+      });
+    }
+    don_get_status();
+  </script>
+
+</body>
+</html>

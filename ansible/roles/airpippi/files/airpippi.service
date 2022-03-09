@@ -1,0 +1,15 @@
+[Unit]
+Description = Airpippi API server
+Requires=network-online.target
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment=FLASK_ENV=production
+WorkingDirectory=/opt/airpippi
+ExecStart = /usr/bin/python3 /opt/airpippi/app.py
+Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target

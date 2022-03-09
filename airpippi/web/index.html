@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>エアぴっぴ</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+  <header class="p-2 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          エアぴっぴ
+        </a>
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-white" href="temp.html">室温ログ</a></li>
+          <li><a class="nav-link px-2 text-white" href="job.html">ジョブ管理</a></li>
+          <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
+          <li><a class="nav-link px-2 text-white" href="light.html">照明</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container pt-5">
+
+    <div id="ret_top" class="visually-hidden" role="alert"></div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-thermometer-half me-3"></i>現在の室温</h1>
+      <h2><i id="temp_icon" class="bi bi-hourglass"></i> <span id="temp"></span> </h2>
+    </div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-power me-3"></i>電源操作</h1>
+      <div id="ret_power" class="visually-hidden" role="alert"></div>
+      <p><button name="power" class="btn btn-outline-secondary" onclick="power();return false">電源を操作する</button></p>
+    </div>
+
+    <div class="mb-5">
+      <h1 class="pb-3 border-bottom"><i class="bi bi-clock me-3"></i>タイマー</h1>
+      <div id="ret_timer" class="visually-hidden" role="alert"></div>
+      <p>
+      <form method="post" action="/" name="time" onsubmit="return timer();">
+        <div class="input-group">
+          <input type="text" autocomplete="off" inputmode="numeric" pattern="\d*" name="time" class="form-control"
+            placeholder="分単位で時間を指定..." required>
+          <button type="submit" name="timerset" class="btn btn-outline-secondary">セット</button>
+        </div>
+      </form>
+      </p>
+    </div>
+  </main>
+
+  <!-- iOSのボタンがニョキッと出てくるのを回避 -->
+  <footer class="mb-3">
+  </footer>
+
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/airpippi.js"></script>
+  <script>
+    function airpippi_temp() {
+      myfetch('/api/temp').then(function (json) {
+        var tempicon = "ok";
+        var temptext = "";
+        if ("temperature" in json) {
+          temp = json['temperature'];
+          if (temp < 18) { tempicon = "x-circle-fill"; }
+          if (17 < temp) { tempicon = "exclamation-triangle"; }
+          if (21 < temp) { tempicon = "check-circle"; }
+          if (28 < temp) { tempicon = "exclamation-triangle"; }
+          if (30 < temp) { tempicon = "x-circle-fill"; }
+          temptext = temp + '℃';
+        } else {
+          tempicon = "hourglass";
+        }
+        document.getElementById("temp").innerHTML = temptext;
+        document.getElementById("temp_icon").className = "me-2 bi bi-" + tempicon;
+        setTimeout("airpippi_temp()", 10000);
+      });
+    }
+    function power() {
+      var result = myfetch('/api/power', { method: 'post' }).then(body => {
+        if (body['result'] != "error") {
+          showMessage("ret_power", "alert alert-success", "電源操作に成功しました", 3000);
+        }
+      });
+      return false;
+    }
+    function timer() {
+      timeElem = document.forms['time'].elements['time'];
+      time = timeElem.value;
+      if (!isFinite(time) || time < 1) {
+        document.getElementById("time");
+        showMessage("ret_timer", "alert alert-danger", "1以上の数字を指定してください", 5000);
+        timeElem.value = "";
+        return false;
+      }
+      myfetch('/api/timer', {
+        method: 'post',
+        body: 'time=' + time,
+        headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" }
+      }).then(body => {
+        if (body['result'] != "error") {
+          time = body['time'];
+          const msg = time + '分後に電源を操作します<br><small>(' + body['result'] + ')</small>';
+          showMessage("ret_timer", "alert alert-success", msg, 5000);
+          timeElem.value = "";
+        }
+      });
+      return false;
+    }
+    airpippi_temp();
+  </script>
+
+</body>
+</html>
