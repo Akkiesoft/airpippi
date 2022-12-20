@@ -89,7 +89,7 @@
         'mastodon_crawler_started': "連携済・ストリーミング接続中"
       };
       const _msg = msg.replaceAll(' ', '_');
-      return msg_table[_msg];
+      return ((_msg in msg_table) ? msg_table[_msg] : msg);
     }
 
     function don_get_status() {
