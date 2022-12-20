@@ -28,10 +28,9 @@ class MaStreamListener(StreamListener):
         try:
             toot = status['status']
             # pass if toot from airpippi
-            if ('application' in toot
-               and 'name' in toot['application']
-               and toot['application']['name'] == "エアぴっぴ"):
-                return True
+            if 'application' in toot and toot['application']:
+               if 'name' in toot['application'] and toot['application']['name'] == "エアぴっぴ":
+                   return True
             # if not mention in tweet, pass
             if not me in toot['content']:
                 return True
