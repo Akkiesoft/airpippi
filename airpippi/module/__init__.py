@@ -75,6 +75,8 @@ else:
 
 if temp_driver:
     from .temp_log import *
+    if 'zabbix' in config:
+        from .temp_zabbix import *
 
 from .timer import *
 from .job import *
