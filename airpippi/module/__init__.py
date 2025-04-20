@@ -65,6 +65,9 @@ if 'TemperatureDriver' in config['DEFAULT']:
     elif config['DEFAULT']['TemperatureDriver'] == 'bme680':
         temp_driver = True
         from .temp_bme680 import *
+    elif config['DEFAULT']['TemperatureDriver'] == 'scd41':
+        temp_driver = True
+        from .temp_scd41 import *
 else:
     @plugin.route("/temp")
     def temp():
