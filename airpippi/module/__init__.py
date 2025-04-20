@@ -81,4 +81,6 @@ if temp_driver:
 from .timer import *
 from .job import *
 from .light import *
-from .mastodon import *
+
+if 'mastodon' in config:
+    from .mastodon import *
