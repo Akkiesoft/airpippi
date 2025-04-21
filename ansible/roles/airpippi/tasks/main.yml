@@ -57,7 +57,7 @@
   notify: restart airpippi api service
 
 - name: copy service file
-  copy:
+  templates:
     src: airpippi.service
     dest: /etc/systemd/system
     owner: "root"

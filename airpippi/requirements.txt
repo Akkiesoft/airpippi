@@ -1,3 +1,4 @@
+gunicorn
 flask
 Mastodon.py
 gpiozero

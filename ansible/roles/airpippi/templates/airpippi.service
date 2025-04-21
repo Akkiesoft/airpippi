@@ -5,9 +5,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-Environment=FLASK_ENV=production
 WorkingDirectory=/opt/airpippi
-ExecStart = /usr/bin/python3 /opt/airpippi/app.py
+ExecStart = gunicorn -b 0.0.0.0:{{ airpippi_api_port | default(8000) }} app:app
 Restart = always
 Type = simple
 
