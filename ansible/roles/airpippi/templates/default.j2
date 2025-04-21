@@ -1,8 +1,7 @@
 server {
-	server_name airpippi;
+	server_name _;
 	listen 80;
 
-	root /opt/airpippi/web;
 	index index.html;
 
 	location / {
@@ -10,9 +9,6 @@ server {
 		auth_basic "Restricted";
 		auth_basic_user_file /etc/nginx/airpippi_api.htpasswd;
 {% endif %}
-	}
-
-	location /api/ {
 		proxy_pass http://localhost:{{ airpippi_api_port | default(8000) }}/;
 	}
 }

@@ -2,7 +2,7 @@ import os
 import configparser
 from flask import Blueprint, current_app
 
-module = Blueprint('module', __name__)
+module = Blueprint('module', __name__, url_prefix='/api')
 
 def run_command(text = '', taskid = -1):
     result = []
@@ -69,7 +69,7 @@ if 'TemperatureDriver' in config['DEFAULT']:
         temp_driver = True
         from .temp_scd41 import *
 else:
-    @module.route("/temp")
+    @module.route("/api/temp")
     def temp():
         return jsonify({"driver": "", "result": "TemperatureDriver parameter is invalid or not found."})
 
