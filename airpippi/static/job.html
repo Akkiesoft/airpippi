@@ -12,11 +12,11 @@
   <header class="p-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <a href="./" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
           エアぴっぴ
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a class="nav-link px-2 text-white" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-white" href="./">メイン</a></li>
           <li><a class="nav-link px-2 text-white" href="temp.html">室温ログ</a></li>
           <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="job.html">ジョブ管理</a></li>
           <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
@@ -135,7 +135,7 @@
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: 'id=' + job_id + '&enabled=' + enabled
       };
-      myfetch('/api/job/enabled', opt).then(j => {
+      myfetch('api/job/enabled', opt).then(j => {
         document.getElementById('jobstatus' + j['jobid']).className = enabled_status_icon(j['enabled']);
         var enabled_status = (j['enabled'] ? '有効' : '無効');
         showMessage("ret_job", "alert alert-success", 'ジョブ [' + j['jobname'] + '] を' + enabled_status + 'にしました。', 3000);
@@ -151,7 +151,7 @@
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: 'id=' + job_id
       };
-      myfetch('/api/job/delete', opt).then(j => {
+      myfetch('api/job/delete', opt).then(j => {
         document.getElementById('job' + j['jobid']).remove();
         showMessage("ret_job", "alert alert-success", 'ジョブ [' + j['jobname'] + '] を削除しました。', 3000);
       });
@@ -209,7 +209,7 @@
     }
 
     function get_job_list() {
-      myfetch('/api/job/list')
+      myfetch('api/job/list')
         .then(j => {
           for ([k, v] of Object.entries(j)) {
             insert_job_into_job_list(k, v);

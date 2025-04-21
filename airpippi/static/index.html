@@ -12,11 +12,11 @@
   <header class="p-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <a href="./" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
           エアぴっぴ
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="./">メイン</a></li>
           <li><a class="nav-link px-2 text-white" href="temp.html">室温ログ</a></li>
           <li><a class="nav-link px-2 text-white" href="job.html">ジョブ管理</a></li>
           <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
@@ -64,7 +64,7 @@
   <script src="js/airpippi.js"></script>
   <script>
     function airpippi_temp() {
-      myfetch('/api/temp').then(function (json) {
+      myfetch('api/temp').then(function (json) {
         var tempicon = "ok";
         var temptext = "";
         if ("temperature" in json) {
@@ -84,7 +84,7 @@
       });
     }
     function power() {
-      var result = myfetch('/api/power', { method: 'post' }).then(body => {
+      var result = myfetch('api/power', { method: 'post' }).then(body => {
         if (body['result'] != "error") {
           showMessage("ret_power", "alert alert-success", "電源操作に成功しました", 3000);
         }
@@ -100,7 +100,7 @@
         timeElem.value = "";
         return false;
       }
-      myfetch('/api/timer', {
+      myfetch('api/timer', {
         method: 'post',
         body: 'time=' + time,
         headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8" }

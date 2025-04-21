@@ -14,11 +14,11 @@
   <header class="p-2 bg-dark text-white">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <a href="./" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
           エアぴっぴ
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a class="nav-link px-2 text-white" href="/">メイン</a></li>
+          <li><a class="nav-link px-2 text-white" href="./">メイン</a></li>
           <li><a class="nav-link px-2 text-secondary active" aria-current="page" href="temp.html">室温ログ</a></li>
           <li><a class="nav-link px-2 text-white" href="job.html">ジョブ管理</a></li>
           <li><a class="nav-link px-2 text-white" href="settings.html">設定</a></li>
@@ -50,7 +50,7 @@
   <script src="js/airpippi.js"></script>
   <script>
     function get_log() {
-      return myfetch('/api/temp/log').then(j => {
+      return myfetch('api/temp/log').then(j => {
         var labels = [];
         var temps = [];
         if (j['result'] == 'ok') {
