@@ -69,7 +69,7 @@ if 'TemperatureDriver' in config['DEFAULT']:
         temp_driver = True
         from .temp_scd41 import *
 else:
-    @plugin.route("/temp")
+    @module.route("/temp")
     def temp():
         return jsonify({"driver": "", "result": "TemperatureDriver parameter is invalid or not found."})
 
