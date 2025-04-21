@@ -12,9 +12,11 @@
 
 - name: enable 1-wire
   command: "raspi-config nonint do_onewire 0"
+  when: temperature_driver == "ds18b20"
 
 - name: enable i2c
   command: "raspi-config nonint do_i2c 0"
+  when: temperature_driver == "bme680" or temperature_driver == "scd41"
 
 - name: create htpasswd file for airpippi
   htpasswd:
